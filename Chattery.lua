@@ -1,4 +1,4 @@
-local Events, Registry;
+local Events, Registry, Utils;
 
 ------------
 
@@ -62,13 +62,13 @@ function Chattery.Init()
     HookEditBoxes("OnShow", Chattery.OnEditBoxShow);
     HookEditBoxes("OnEnterPressed", Chattery.OnEditBoxEnterPressed);
 
-    Events, Registry = Chattery.Events, Chattery.EventRegistry;
+    Events, Registry, Utils = Chattery.Events, Chattery.EventRegistry, Chattery.Utils;
     Registry:RegisterCallback(Events.SHOW_HARDWARE_INPUT_PROMPT, Chattery.PromptForHardwareInput);
     Registry:RegisterCallback(Events.HIDE_HARDWARE_INPUT_PROMPT, Chattery.HidePromptForHardwareInput);
 end
 
 function Chattery.ShouldHandleEditBox()
-    return not IsInInstance();
+    return not Utils.IsInCombatInstance();
 end
 
 function Chattery.SetEditBoxToDefaults(editBox)

@@ -1,6 +1,7 @@
 local Events = Chattery.Events;
 local Registry = Chattery.EventRegistry;
 local Tokenizer = Chattery.Tokenizer;
+local Utils = Chattery.Utils;
 
 local _SendChatMessage = C_ChatInfo.SendChatMessage;
 local _SendBNetWhisper = C_BattleNet.SendWhisper;
@@ -249,7 +250,7 @@ function ChatManager.ShouldHandleChat(chatType)
         return false;
     end
 
-    if IsInInstance() then
+    if Utils.IsInCombatInstance() then
         return false;
     end
 

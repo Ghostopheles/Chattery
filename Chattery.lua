@@ -100,8 +100,6 @@ function Chattery.OnEditBoxShow(editBox)
     editBox:SetMaxLetters(0);
     editBox:SetMaxBytes(0);
     editBox:SetVisibleTextByteLimit(0);
-
-    print(editBox:GetMaxBytes(), "BYTES")
 end
 
 function Chattery.OnEditBoxEnterPressed(editBox)

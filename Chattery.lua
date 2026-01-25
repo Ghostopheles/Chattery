@@ -121,6 +121,12 @@ end
 EventUtil.ContinueOnAddOnLoaded("Chattery", Chattery.Init);
 
 function Chattery.PromptForHardwareInput()
+    if HW_PROMPT_ACTIVE then
+        print("There's a problem here and it's not properly handled, too bad!");
+        Chattery.HidePromptForHardwareInput();
+        return;
+    end
+
     ShowHardwarePrompt();
     HW_PROMPT_ACTIVE = true;
 end

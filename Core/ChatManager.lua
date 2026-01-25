@@ -12,7 +12,7 @@ local WAITING_FOR_HARDWARE_INPUT = false;
 local MESSAGE_COUNTER = 0;
 local HIDE_THROTTLE_MESSAGE = true; -- make this a setting probably
 
-local SHOW_MESSAGE_INDEX = true; -- make this a setting probably
+local SHOW_MESSAGE_INDEX = false; -- make this a setting probably
 
 local THROTTLE_BYTES_PER_SECOND = 1000;
 local THROTTLE_BURST_BYTES_PER_SECOND = 2000;

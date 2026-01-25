@@ -14,11 +14,6 @@ local HIDE_THROTTLE_MESSAGE = true; -- make this a setting probably
 
 local SHOW_MESSAGE_INDEX = true; -- make this a setting probably
 
-local SEND_FAILURES = {};
-local MAX_RETRIES = 5;
-
-local SEND_TIMEOUT = 10;
-
 local THROTTLE_BYTES_PER_SECOND = 1000;
 local THROTTLE_BURST_BYTES_PER_SECOND = 2000;
 local TICK_PERIOD = 0.25;

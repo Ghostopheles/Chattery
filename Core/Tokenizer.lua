@@ -13,7 +13,7 @@ function Tokenizer:Tokenize(message)
 
     local pattern = "(|c[fn][^|]*|H[^|]+|h(.-)|h|r)";
 
-    while i <= message:len() do
+    while i <= #message do
         local s, e, link = message:find(pattern, i);
 
         if not s then

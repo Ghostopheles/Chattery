@@ -286,9 +286,9 @@ function ChatManager.SplitMessage(message, chunkSize)
     local current = "";
 
     local function flushRaw()
-        if current:len() > 0 then
+        if #current > 0 then
             tinsert(rawChunks, current);
-            current = ""
+            current = "";
         end
     end
 
@@ -297,16 +297,16 @@ function ChatManager.SplitMessage(message, chunkSize)
         local text = token.Value;
         if token.Type == Tokenizer.TOKEN_TYPE.Link then
             local _, _, displayText = LinkUtil.ExtractLink(text);
-            local visibleLength = displayText:len();
             if #current + visibleLength > usableLength then
+            local visibleLength = #displayText;
                 flushRaw();
             end
             current = current .. text;
         else
             local parts = ChatManager.SplitMessageByWords(token.Value);
             for _, part in ipairs(parts) do
-                local partLength = part:len();
-                if partLength <= usableLength - current:len() then
+                local partLength = #part;
+                if partLength <= usableLength() - #current then
                     current = current .. part;
                 else
                     flushRaw();
@@ -314,8 +314,8 @@ function ChatManager.SplitMessage(message, chunkSize)
                         current = part;
                     else
                         local pos = 1;
-                        while pos <= part:len() do
-                            local take = min(usableLength, part:len() - pos + 1);
+                        while pos <= #part do
+                            local take = min(usableLength(), #part - pos + 1);
                             current = part:sub(pos, pos + take - 1);
                             pos = pos + take;
                             flushRaw();

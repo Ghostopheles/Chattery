@@ -278,7 +278,7 @@ function ChatManager.SplitMessage(message, chunkSize)
     local current = "";
 
     local function maxOverhead()
-        local index = #rawChunks;
+        local index = #rawChunks + 1;
         local newPrefix;
         if SHOW_MESSAGE_INDEX then
             newPrefix = format("[%d] ", index);
@@ -287,7 +287,7 @@ function ChatManager.SplitMessage(message, chunkSize)
         end
 
         tinsert(prefixes, index, newPrefix);
-        local paddingSize = #newPrefix + suffixSize + (2 * #MSG_SPLIT_MARKER) + 2;
+        local paddingSize = #newPrefix + suffixSize + (2 * #MSG_SPLIT_MARKER) + 1;
         return paddingSize;
     end
 

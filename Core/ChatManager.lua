@@ -10,7 +10,9 @@ local HARDWARE_INPUT = false;
 local WAITING_FOR_HARDWARE_INPUT = false;
 
 local MESSAGE_COUNTER = 0;
-local HIDE_THROTTLE_MESSAGE = true;
+local HIDE_THROTTLE_MESSAGE = true; -- make this a setting probably
+
+local SHOW_MESSAGE_INDEX = true; -- make this a setting probably
 
 local SEND_FAILURES = {};
 local MAX_RETRIES = 5;
@@ -220,16 +222,8 @@ local AREA_CHAT_TYPES = {
 local MSG_SPLIT_MARKER = "»";
 local MSG_PREFIX, MSG_SUFFIX = "", "";
 
-local function IsString(str)
-    return type(str) == "string";
-end
-
 ---@class ChatteryChatManager
 local ChatManager = {};
-
-function ChatManager.GetPaddingSize()
-    return IsString(MSG_PREFIX) and MSG_PREFIX:len() or 0, IsString(MSG_SUFFIX) and MSG_SUFFIX:len() or 0;
-end
 
 function ChatManager.GetPaddingText()
     return MSG_PREFIX, MSG_SUFFIX;
@@ -277,13 +271,30 @@ function ChatManager.SplitMessage(message, chunkSize)
     chunkSize = chunkSize or CHUNK_SIZES.Default;
 
     local prefix, suffix = ChatManager.GetPaddingText();
-    local prefixSize, suffixSize = ChatManager.GetPaddingSize();
-    local totalPaddingSize = prefixSize + suffixSize;
+    local suffixSize = #suffix;
 
-    local maxOverhead = totalPaddingSize + (2 * MSG_SPLIT_MARKER:len()) + 2;
-    local usableLength = chunkSize - maxOverhead;
+    local prefixes = {};
     local rawChunks = {};
     local current = "";
+
+    local function maxOverhead()
+        local index = #rawChunks;
+        local newPrefix;
+        if SHOW_MESSAGE_INDEX then
+            newPrefix = format("[%d] ", index);
+        else
+            newPrefix = prefix;
+        end
+
+        tinsert(prefixes, index, newPrefix);
+        local paddingSize = #newPrefix + suffixSize + (2 * #MSG_SPLIT_MARKER) + 2;
+        return paddingSize;
+    end
+
+    local function usableLength()
+        local overhead = maxOverhead();
+        return chunkSize - overhead;
+    end
 
     local function flushRaw()
         if #current > 0 then
@@ -297,8 +308,8 @@ function ChatManager.SplitMessage(message, chunkSize)
         local text = token.Value;
         if token.Type == Tokenizer.TOKEN_TYPE.Link then
             local _, _, displayText = LinkUtil.ExtractLink(text);
-            if #current + visibleLength > usableLength then
             local visibleLength = #displayText;
+            if #current + visibleLength > usableLength() then
                 flushRaw();
             end
             current = current .. text;
@@ -310,7 +321,7 @@ function ChatManager.SplitMessage(message, chunkSize)
                     current = current .. part;
                 else
                     flushRaw();
-                    if partLength <= usableLength then
+                    if partLength <= usableLength() then
                         current = part;
                     else
                         local pos = 1;
@@ -329,17 +340,17 @@ function ChatManager.SplitMessage(message, chunkSize)
     flushRaw();
 
     local finalChunks = {};
-    local numChunks = #rawChunks;
+    local numFinalChunks = #rawChunks;
 
     for i, content in ipairs(rawChunks) do
         local startMarker = (i > 1) and (MSG_SPLIT_MARKER .. " ") or "";
-        local endMarker = (i < numChunks) and MSG_SPLIT_MARKER or "";
+        local endMarker = (i < numFinalChunks) and MSG_SPLIT_MARKER or "";
 
         if strbyte(content, -1) ~= 32 then
             content = content .. " ";
         end
 
-        local chunk = tostring(i) .. startMarker .. content .. endMarker .. suffix;
+        local chunk = prefixes[i] .. startMarker .. content .. endMarker .. suffix;
         tinsert(finalChunks, chunk);
     end
 

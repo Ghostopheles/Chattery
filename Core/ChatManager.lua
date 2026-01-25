@@ -93,10 +93,15 @@ function QueueHandler:UpdateBandwidth()
     BANDWIDTH_TIME = time;
 end
 
+function QueueHandler:DoesChatTypeRequireHardwareInput(chatType)
+    return Utils.IsInCombatInstance() and HARDWARE_RESTRICTED_CHAT_TYPES[chatType];
+
+end
+
 function QueueHandler:TrySendMessage(entry)
     self:UpdateBandwidth();
 
-    if not HARDWARE_INPUT and HARDWARE_RESTRICTED_CHAT_TYPES[entry.ChatType] then
+    if not HARDWARE_INPUT and self:DoesChatTypeRequireHardwareInput(entry.ChatType) then
         WAITING_FOR_HARDWARE_INPUT = true;
         return MESSAGE_SEND_ERR.PROMPT;
     end

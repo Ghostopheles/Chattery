@@ -3,9 +3,6 @@ local Registry = Chattery.EventRegistry;
 local Tokenizer = Chattery.Tokenizer;
 local Utils = Chattery.Utils;
 
-local _SendChatMessage = C_ChatInfo.SendChatMessage;
-local _SendBNetWhisper = C_BattleNet.SendWhisper;
-
 local HARDWARE_INPUT = false;
 local WAITING_FOR_HARDWARE_INPUT = false;
 
@@ -20,6 +17,8 @@ local TICK_PERIOD = 0.25;
 
 local BANDWIDTH = 0;
 local BANDWIDTH_TIME = GetTime();
+
+local BNET_CHAT_TYPE = "BN_WHISPER";
 
 ---@enum
 local HARDWARE_RESTRICTED_CHAT_TYPES = {
@@ -47,7 +46,6 @@ function QueueHandler:Start()
 
     self.Running = true;
     self.Ticker = C_Timer.NewTicker(TICK_PERIOD, function() self:Tick() end, #self.MessageQueue);
-    self:Tick();
 end
 
 function QueueHandler:Tick()
@@ -113,10 +111,10 @@ function QueueHandler:TrySendMessage(entry)
 
     BANDWIDTH = BANDWIDTH - messageSize;
 
-    if entry.ChatType == "BNET" then
-        _SendBNetWhisper(entry.Target, entry.Message);
+    if entry.ChatType == BNET_CHAT_TYPE then
+        C_BattleNet.SendWhisper(entry.Target, entry.Message);
     else
-        _SendChatMessage(entry.Message, entry.ChatType, entry.LanguageOrClubID, entry.Target);
+        C_ChatInfo.SendChatMessage(entry.Message, entry.ChatType, entry.LanguageOrClubID, entry.Target);
     end
     Registry:TriggerEvent(Events.MESSAGE_SENT, entry);
     return MESSAGE_SEND_ERR.SUCCESS;
@@ -146,35 +144,11 @@ end
 
 ------------
 
-local FRAME_EVENTS = {
-    "CHAT_MSG_SAY",
-    "CHAT_MSG_EMOTE",
-    "CHAT_MSG_YELL",
-    "CHAT_MSG_GUILD",
-    "CHAT_MSG_OFFICER",
-    "CHAT_MSG_COMMUNITIES_CHANNEL",
-    "CLUB_MESSAGE_ADDED",
-    "CLUB_ERROR",
-    "CLUB_MESSAGE_UPDATED",
-    "CHAT_MSG_BN_WHISPER_INFORM",
-    "CHAT_MSG_BN_WHISPER_PLAYER_OFFLINE",
-    "CHAT_MSG_SYSTEM",
-};
-
-local eventFrame = CreateFrame("Frame");
-FrameUtil.RegisterFrameForEvents(eventFrame, FRAME_EVENTS);
-
 ChatFrameUtil.AddMessageEventFilter("CHAT_MSG_SYSTEM", function(_, _, message)
     if HIDE_THROTTLE_MESSAGE and message == ERR_CHAT_THROTTLED then
         return true;
     end
 end);
-
-function eventFrame:OnEvent(event, ...)
-    if self[event] then
-        self[event](self, ...);
-    end
-end
 
 ------------
 
@@ -198,25 +172,13 @@ local CHAT_TYPE_TO_CHUNK_SIZE = {
     OFFICER = CHUNK_SIZES.Default,
     WHISPER = CHUNK_SIZES.Default,
     VOICE_TEXT = CHUNK_SIZES.Default,
-    BNET = CHUNK_SIZES.Extended
+    BN_WHISPER = CHUNK_SIZES.Extended
 };
 
 ---@enum
 local UNSUPPORTED_CHAT_TYPES = {
     CHANNEL = true,
     VOICE_TEXT = true,
-};
-
-local RESTRICTIONS = {
-    Enum.AddOnRestrictionType.Combat,
-    Enum.AddOnRestrictionType.Encounter
-};
-
----@enum
-local AREA_CHAT_TYPES = {
-    SAY = true,
-    EMOTE = true,
-    YELL = true
 };
 
 local MSG_SPLIT_MARKER = "»";
@@ -352,49 +314,80 @@ function ChatManager.ContinueFromPrompt()
     QueueHandler:Start();
 end
 
----@param message string
----@param chatType SendChatMessageType | "BNET"?
----@param languageOrClubID number?
----@param targetOrChannel string?
-function ChatManager.OnSendChatMessage(message, chatType, languageOrClubID, targetOrChannel)
+function ChatManager.GetBNetAccountIDForTarget(targetName)
+    for i=1, BNGetNumFriends() do
+        local accountInfo = C_BattleNet.GetFriendAccountInfo(i);
+        if accountInfo and (accountInfo.accountName == targetName) then
+            return accountInfo.bnetAccountID;
+        end
+    end
+end
+
+local TARGET_EDIT_BOX, TEXT_BEFORE_PARSE;
+
+---@param editBox EditBox
+---@param send number
+function ChatManager.OnEditBoxParseText(editBox, send)
+    local message = editBox:GetText();
+    if not message or message == "" or send ~= 1 then
+        return;
+    end
+
+    local chatType = ChatFrameUtil.GetActiveChatType();
     chatType = chatType and chatType:upper() or "SAY";
-
-    if UnitIsDeadOrGhost("player") and AREA_CHAT_TYPES[chatType] then
-        UIErrorsFrame:AddMessage(ERR_CHAT_WHILE_DEAD);
-        return;
-    end
-
-    if message == "" then
-        return;
-    end
 
     local chunkSize = CHAT_TYPE_TO_CHUNK_SIZE[chatType];
     if not ChatManager.ShouldHandleChat(chatType) or message:len() < chunkSize then
-        if chatType == "BNET" then
-            _SendBNetWhisper(targetOrChannel, message);
-        else
-            _SendChatMessage(message, chatType, languageOrClubID, targetOrChannel);
-        end
         return;
     end
 
+    -- it's chattery'ing time
+    TARGET_EDIT_BOX = editBox;
+    TEXT_BEFORE_PARSE = message;
+
     HARDWARE_INPUT = true;
 
+    local chatTarget;
+    if chatType == BNET_CHAT_TYPE then
+        chatTarget = ChatManager.GetBNetAccountIDForTarget(chatTarget);
+    else
+        chatTarget = editBox:GetTellTarget() or editBox:GetChannelTarget();
+        if chatTarget == 0 then
+            chatTarget = nil;
+        end
+    end
+
+    local language = editBox.languageID;
+
     local chunks = ChatManager.SplitMessage(message, chunkSize);
-    for _, chunk in ipairs(chunks) do
-        QueueHandler:QueueMessage(chunk, chatType, languageOrClubID, targetOrChannel);
+    -- can just send the first chunk immediately by changing the editBox text
+    editBox:SetText(chunks[1]);
+    for i = 2, #chunks do -- skipping first index because of above
+        local chunk = chunks[i];
+        QueueHandler:QueueMessage(chunk, chatType, language, chatTarget);
     end
     QueueHandler:Start();
 end
 
-function ChatManager.OnSendBattleNetWhisper(bnetAccountID, message)
-    ChatManager.OnSendChatMessage(message, "BNET", nil, bnetAccountID);
+function ChatManager.OnSubstituteChatMessageBeforeSend()
+    if not (TARGET_EDIT_BOX and TEXT_BEFORE_PARSE) then
+        return;
+    end
+
+    TARGET_EDIT_BOX:SetText(TEXT_BEFORE_PARSE);
+    TARGET_EDIT_BOX = nil;
+    TEXT_BEFORE_PARSE = nil;
 end
 
-C_ChatInfo.SendChatMessage = ChatManager.OnSendChatMessage;
-C_BattleNet.SendWhisper = ChatManager.OnSendBattleNetWhisper;
-
 ------------
+
+for i = 1, Constants.ChatFrameConstants.MaxChatWindows do
+    local name = "ChatFrame" .. i .. "EditBox";
+    hooksecurefunc(_G[name], "ParseText", ChatManager.OnEditBoxParseText);
+end
+
+hooksecurefunc(ChatFrameUtil, "SubstituteChatMessageBeforeSend", ChatManager.OnSubstituteChatMessageBeforeSend);
+
 
 Chattery.QueueHandler = QueueHandler;
 Chattery.ChatManager = ChatManager;

@@ -12,7 +12,7 @@ local WAITING_FOR_HARDWARE_INPUT = false;
 local MESSAGE_COUNTER = 0;
 local HIDE_THROTTLE_MESSAGE = true; -- make this a setting probably
 
-local SHOW_MESSAGE_INDEX = false; -- make this a setting probably
+local SHOW_MESSAGE_INDEX = true; -- make this a setting probably
 
 local THROTTLE_BYTES_PER_SECOND = 1000;
 local THROTTLE_BURST_BYTES_PER_SECOND = 2000;
@@ -240,18 +240,8 @@ function ChatManager.SetPadding(prefix, suffix)
 end
 
 function ChatManager.ShouldHandleChat(chatType)
-    if UNSUPPORTED_CHAT_TYPES[chatType] then
+    if UNSUPPORTED_CHAT_TYPES[chatType] or Utils.IsInChatLockdown() then
         return false;
-    end
-
-    if Utils.IsInCombatInstance() then
-        return false;
-    end
-
-    for _, restriction in pairs(RESTRICTIONS) do
-        if C_RestrictedActions.IsAddOnRestrictionActive(restriction) then
-            return false;
-        end
     end
 
     return true;

@@ -68,7 +68,7 @@ function Chattery.Init()
 end
 
 function Chattery.ShouldHandleEditBox()
-    return not Utils.IsInCombatInstance();
+    return not Utils.IsInChatLockdown();
 end
 
 function Chattery.SetEditBoxToDefaults(editBox)

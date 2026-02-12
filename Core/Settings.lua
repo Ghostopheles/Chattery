@@ -94,7 +94,7 @@ function Chattery_ToggleSettingsFrame()
 end
 
 SLASH_CHATTERY1 = "/chattery";
-SlashCmdList["CHATTERY"] = ToggleSettingsFrame;
+SlashCmdList["CHATTERY"] = Chattery_ToggleSettingsFrame;
 
 ------------
 

@@ -28,5 +28,6 @@ Chattery.lua
 
 Core/Utils.lua
 Core/Events.lua
+Core/Settings.lua
 Core/Tokenizer.lua
 Core/ChatManager.lua

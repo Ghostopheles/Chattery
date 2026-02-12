@@ -9,8 +9,6 @@ local WAITING_FOR_HARDWARE_INPUT = false;
 local MESSAGE_COUNTER = 0;
 local HIDE_THROTTLE_MESSAGE = true; -- make this a setting probably
 
-local SHOW_MESSAGE_INDEX = true; -- make this a setting probably
-
 local THROTTLE_BYTES_PER_SECOND = 1000;
 local THROTTLE_BURST_BYTES_PER_SECOND = 2000;
 local TICK_PERIOD = 0.25;
@@ -181,7 +179,6 @@ local UNSUPPORTED_CHAT_TYPES = {
     VOICE_TEXT = true,
 };
 
-local MSG_SPLIT_MARKER = "»";
 local MSG_PREFIX, MSG_SUFFIX = "", "";
 
 ---@class ChatteryChatManager
@@ -209,6 +206,14 @@ function ChatManager.ShouldHandleChat(chatType)
     return true;
 end
 
+function ChatManager.GetMessageSplitMarker()
+    return Chattery.Settings.GetSetting(Chattery.Setting.SplitMarker);
+end
+
+function ChatManager.ShouldShowMessageIndex()
+    return Chattery.Settings.GetSetting(Chattery.Setting.ShowMessageIndex);
+end
+
 function ChatManager.SplitMessageByWords(message)
     local parts = {};
 
@@ -229,17 +234,19 @@ function ChatManager.SplitMessage(message, chunkSize)
     local rawChunks = {};
     local current = "";
 
+    local splitMarker = ChatManager.GetMessageSplitMarker();
+
     local function maxOverhead()
         local index = #rawChunks + 1;
         local newPrefix;
-        if SHOW_MESSAGE_INDEX then
+        if ChatManager.ShouldShowMessageIndex() then
             newPrefix = format("[%d] ", index);
         else
             newPrefix = prefix;
         end
 
         tinsert(prefixes, index, newPrefix);
-        local paddingSize = #newPrefix + suffixSize + (2 * #MSG_SPLIT_MARKER) + 1;
+        local paddingSize = #newPrefix + suffixSize + (2 * #splitMarker) + 1;
         return paddingSize;
     end
 
@@ -295,8 +302,8 @@ function ChatManager.SplitMessage(message, chunkSize)
     local numFinalChunks = #rawChunks;
 
     for i, content in ipairs(rawChunks) do
-        local startMarker = (i > 1) and (MSG_SPLIT_MARKER .. " ") or "";
-        local endMarker = (i < numFinalChunks) and MSG_SPLIT_MARKER or "";
+        local startMarker = (i > 1) and (splitMarker .. " ") or "";
+        local endMarker = (i < numFinalChunks) and splitMarker or "";
 
         if strbyte(content, -1) ~= 32 then
             content = content .. " ";

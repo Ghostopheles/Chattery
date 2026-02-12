@@ -89,7 +89,7 @@ messageIndexFrame:SetPoint("TOP", splitMarkerFrame, "BOTTOM", 0, -8);
 
 SettingsFrame:Hide();
 
-local function ToggleSettingsFrame()
+function Chattery_ToggleSettingsFrame()
     SettingsFrame:SetShown(not SettingsFrame:IsShown());
 end
 

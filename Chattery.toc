@@ -6,6 +6,9 @@
 ## SavedVariables: ChatteryConfig
 ## LoadSavedVariablesFirst: 1
 
+## IconAtlas: UI-ChatIcon-Discord
+## AddonCompartmentFunc: Chattery_ToggleSettingsFrame
+
 ## Category: Chat
 ## Category-deDE: Chat
 ## Category-esES: Chat

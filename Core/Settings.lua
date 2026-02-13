@@ -34,6 +34,17 @@ local SettingsFrame = CreateFrame("Frame", "ChatterySettingsFrame", UIParent, "P
 SettingsFrame:SetSize(300, 400);
 SettingsFrame:SetPoint("CENTER");
 SettingsFrame:SetTitle("Chattery Settings");
+SettingsFrame:SetMovable(true);
+SettingsFrame:EnableMouse(true);
+SettingsFrame:RegisterForDrag("LeftButton");
+SettingsFrame:SetScript("OnDragStart", function(self)
+    self:StartMoving();
+end);
+SettingsFrame:SetScript("OnDragStop", function(self)
+    self:StopMovingOrSizing();
+end);
+
+tinsert(UISpecialFrames, SettingsFrame:GetName());
 
 ButtonFrameTemplate_HidePortrait(SettingsFrame);
 

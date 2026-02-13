@@ -7,17 +7,27 @@ local ChatterySettings = {};
 ---@enum ChatterySetting
 local Setting = {
     SplitMarker = "SplitMarker",
-    ShowMessageIndex = "ShowMessageIndex"
+    ShowMessageIndex = "ShowMessageIndex",
+    HandleRPSyntax = "HandleRPSyntax"
 };
 
 local defaultConfig = {
     [Setting.SplitMarker] = "»",
     [Setting.ShowMessageIndex] = false,
+    [Setting.HandleRPSyntax] = true,
 };
 
 if not ChatteryConfig then
     ChatteryConfig = CopyTable(defaultConfig);
+else
+    for setting, value in pairs(defaultConfig) do
+        if ChatteryConfig[setting] == nil then
+            ChatteryConfig[setting] = value
+        end
+    end
 end
+
+------------
 
 function ChatterySettings.GetSetting(setting)
     return ChatteryConfig[setting];
@@ -92,11 +102,19 @@ local function AddCheckboxForSetting(setting, displayText)
     return f;
 end
 
+------
+--- settings
+
 local splitMarkerFrame = AddEditBoxForSetting(Setting.SplitMarker, "Split Marker");
 splitMarkerFrame:SetPoint("TOP", SettingsFrame, "TOP", 0, -32);
 
 local messageIndexFrame = AddCheckboxForSetting(Setting.ShowMessageIndex, "Show Message Index");
 messageIndexFrame:SetPoint("TOP", splitMarkerFrame, "BOTTOM", 0, -8);
+
+local handleRPSyntaxFrame = AddCheckboxForSetting(Setting.HandleRPSyntax, "Handle Special RP Syntax");
+handleRPSyntaxFrame:SetPoint("TOP", messageIndexFrame, "BOTTOM", 0, -8);
+
+------
 
 SettingsFrame:Hide();
 

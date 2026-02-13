@@ -181,6 +181,10 @@ local UNSUPPORTED_CHAT_TYPES = {
 
 local MSG_PREFIX, MSG_SUFFIX = "", "";
 
+local RP_SYNTAX_SPECIAL_CHARS = {
+    ['"'] = true
+};
+
 ---@class ChatteryChatManager
 local ChatManager = {};
 
@@ -214,6 +218,10 @@ function ChatManager.ShouldShowMessageIndex()
     return Chattery.Settings.GetSetting(Chattery.Setting.ShowMessageIndex);
 end
 
+function ChatManager.ShouldHandleRPSyntax()
+    return Chattery.Settings.GetSetting(Chattery.Setting.HandleRPSyntax);
+end
+
 function ChatManager.SplitMessageByWords(message)
     local parts = {};
 
@@ -235,6 +243,7 @@ function ChatManager.SplitMessage(message, chunkSize)
     local current = "";
 
     local splitMarker = ChatManager.GetMessageSplitMarker();
+    local handleRPSyntax = ChatManager.ShouldHandleRPSyntax();
 
     local function maxOverhead()
         local index = #rawChunks + 1;
@@ -255,10 +264,63 @@ function ChatManager.SplitMessage(message, chunkSize)
         return chunkSize - overhead;
     end
 
+    local in_rp_syntax_context;
+    local rp_syntax_active_char;
+    local rp_syntax_reopen_next;
+
+    local function resetRPSyntaxState()
+        in_rp_syntax_context = false;
+        rp_syntax_active_char = nil;
+        rp_syntax_reopen_next = nil;
+    end
+
+    local function updateRPSyntaxState(text)
+        if not handleRPSyntax then
+            return;
+        end
+
+        for i = 1, #text do
+            local c = text:sub(i, i)
+
+            if RP_SYNTAX_SPECIAL_CHARS[c] then
+                if not in_rp_syntax_context then
+                    in_rp_syntax_context = true;
+                    rp_syntax_active_char = c;
+                elseif rp_syntax_active_char == c then
+                    in_rp_syntax_context = false;
+                    rp_syntax_active_char = nil;
+                end
+            end
+        end
+    end
+
     local function flushRaw()
-        if #current > 0 then
-            tinsert(rawChunks, current);
-            current = "";
+        if #current == 0 then
+            return;
+        end
+
+        local out = current;
+
+        if in_rp_syntax_context then
+            out = strtrim(out, " ") .. rp_syntax_active_char;
+            rp_syntax_reopen_next = rp_syntax_active_char;
+        else
+            resetRPSyntaxState();
+        end
+
+        tinsert(rawChunks, out);
+
+        current = "";
+    end
+
+    local function appendText(part, isLink)
+        if rp_syntax_reopen_next and #current == 0 then
+            current = rp_syntax_reopen_next;
+        end
+
+        current = current .. part;
+        if not isLink then
+            updateRPSyntaxState(part);
         end
     end
 
@@ -271,24 +333,26 @@ function ChatManager.SplitMessage(message, chunkSize)
             if #current + visibleLength > usableLength() then
                 flushRaw();
             end
-            current = current .. text;
+            local isLink = true;
+            appendText(text, isLink);
         else
             local parts = ChatManager.SplitMessageByWords(token.Value);
             for _, part in ipairs(parts) do
                 local partLength = #part;
-                if partLength <= usableLength() - #current then
-                    current = current .. part;
+                if #current + partLength <= usableLength() then
+                    appendText(part);
                 else
                     flushRaw();
                     if partLength <= usableLength() then
-                        current = part;
+                        appendText(part);
                     else
                         local pos = 1;
                         while pos <= #part do
                             local take = min(usableLength(), #part - pos + 1);
-                            current = part:sub(pos, pos + take - 1);
-                            pos = pos + take;
+                            local newPart = part:sub(pos, pos + take - 1);
+                            appendText(newPart);
                             flushRaw();
+                            pos = pos + take;
                         end
                     end
                 end

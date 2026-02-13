@@ -457,8 +457,9 @@ for i = 1, Constants.ChatFrameConstants.MaxChatWindows do
     hooksecurefunc(_G[name], "ParseText", ChatManager.OnEditBoxParseText);
 end
 
-hooksecurefunc(ChatFrameUtil, "SubstituteChatMessageBeforeSend", ChatManager.OnSubstituteChatMessageBeforeSend);
-
+C_Timer.After(2, function()
+    hooksecurefunc(ChatFrameUtil, "SubstituteChatMessageBeforeSend", ChatManager.OnSubstituteChatMessageBeforeSend);
+end);
 
 Chattery.QueueHandler = QueueHandler;
 Chattery.ChatManager = ChatManager;

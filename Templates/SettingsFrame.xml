@@ -32,7 +32,6 @@
 
         <Scripts>
             <OnLoad method="OnLoad"/>
-            <OnShow method="OnShow"/>
         </Scripts>
     </Frame>
 </Ui>

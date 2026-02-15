@@ -1,4 +1,7 @@
+local addonName = ...;
 local Events, Registry, Utils;
+
+local ADDON_COLOR = CreateColorFromHexString("ff5865F2");
 
 ------------
 
@@ -122,7 +125,7 @@ EventUtil.ContinueOnAddOnLoaded("Chattery", Chattery.Init);
 
 function Chattery.PromptForHardwareInput()
     if HW_PROMPT_ACTIVE then
-        print("There's a problem here and it's not properly handled, too bad!");
+        print("Chattery: There's a problem here and it's not properly handled, too bad!");
         Chattery.HidePromptForHardwareInput();
         return;
     end
@@ -134,4 +137,16 @@ end
 function Chattery.HidePromptForHardwareInput()
     HideHardwarePrompt();
     HW_PROMPT_ACTIVE = false;
+end
+
+function Chattery.GetAddonColor()
+    return ADDON_COLOR;
+end
+
+function Chattery.GetColoredAddonName()
+    local color = Chattery.GetAddonColor();
+    if not color then
+        return addonName;
+    end
+    return color:WrapTextInColorCode(addonName);
 end

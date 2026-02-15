@@ -1,7 +1,7 @@
 ChatterySettingContainerMixin = {};
 
 function ChatterySettingContainerMixin:OnShow()
-    local startDelay = 0.075 + (0.035 * (self.OrderIndex - 1));
+    local startDelay = 0.085 + (0.035 * (self.OrderIndex - 1));
     C_Timer.After(startDelay, function()
         self.Anim:SlideInFromBottom();
     end);

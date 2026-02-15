@@ -1,5 +1,5 @@
 ## Interface: 120001
-## Title: Chattery
+## Title: |cff5865F2Chattery|r
 ## Notes: A collection of cadaverous chat enhancements for roleplayers
 ## Author: Ghostopheles
 ## Version: @project-version@

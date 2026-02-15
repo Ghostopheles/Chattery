@@ -16,7 +16,14 @@ ChatterySettingsFrameMixin = {};
 function ChatterySettingsFrameMixin:OnLoad()
     ButtonFrameTemplate_HidePortrait(self);
 
-    self:SetTitle("Chattery Settings");
+    local titleText = _G[self:GetName() .. "TitleText"];
+    titleText:SetFontObject(GameFontWhite);
+
+    local iconAtlas = C_AddOns.GetAddOnMetadata("Chattery", "IconAtlas");
+    local atlasMarkup = CreateAtlasMarkup(iconAtlas, 16, 16);
+
+    local name = Chattery.GetColoredAddonName();
+    self:SetTitle(atlasMarkup .. " " .. name .. " Settings");
 
     self.CloseButton:SetScript("OnClick", function()
         self:ToggleShown();
@@ -34,10 +41,6 @@ function ChatterySettingsFrameMixin:OnLoad()
     self.Anim.HideOnAnimFinish = true;
 
     self:Setup();
-end
-
-function ChatterySettingsFrameMixin:OnShow()
-
 end
 
 function ChatterySettingsFrameMixin:ToggleShown()

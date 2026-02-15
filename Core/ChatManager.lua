@@ -127,17 +127,9 @@ function QueueHandler:QueueMessage(message, chatType, languageOrClubID, target)
         LanguageOrClubID = languageOrClubID,
         Target = target,
         ID = MESSAGE_COUNTER,
-        Priority = 1 --TODO: implement
     };
 
-    local idx = #self.MessageQueue + 1;
-    for i, msg in ipairs(self.MessageQueue) do
-        if msg.Priority > msgEntry.Priority then
-            idx = i;
-            break
-        end
-    end
-    tinsert(self.MessageQueue, idx, msgEntry);
+    tinsert(self.MessageQueue, msgEntry);
 end
 
 ------------

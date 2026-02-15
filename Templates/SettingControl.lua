@@ -98,6 +98,7 @@ ChatterySettingControlCheckboxMixin = {};
 
 function ChatterySettingControlCheckboxMixin:OnClick()
     self.Dirty = true;
+    self:SyncValueToSetting();
 end
 
 function ChatterySettingControlCheckboxMixin:SetValue(value)

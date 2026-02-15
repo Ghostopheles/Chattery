@@ -214,8 +214,7 @@ function ChatManager.OnEditBoxParseText(editBox, send)
 
     local language = editBox.languageID;
 
-    local results, chunks = C_AddOnProfiler.MeasureCall(Chunker.SplitMessage, message, chunkSize);
-    DevTool:AddData(results);
+    local chunks = Chunker.SplitMessage(message, chunkSize);
     -- can just send the first chunk immediately by changing the editBox text
     editBox:SetText(chunks[1]);
     for i = 2, #chunks do -- skipping first index because of above

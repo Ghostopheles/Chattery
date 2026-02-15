@@ -94,7 +94,7 @@ function QueueHandler:UpdateBandwidth()
 end
 
 function QueueHandler:DoesChatTypeRequireHardwareInput(chatType)
-    return not Utils.IsInCombatInstance() and HARDWARE_RESTRICTED_CHAT_TYPES[chatType];
+    return Utils.IsInOpenWorld() and HARDWARE_RESTRICTED_CHAT_TYPES[chatType];
 end
 
 function QueueHandler:TrySendMessage(entry)

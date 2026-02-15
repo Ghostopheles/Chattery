@@ -1,6 +1,10 @@
 ---@class ChatteryUtils
 local Utils = {};
 
+function Utils.IsInOpenWorld()
+    return not IsInInstance();
+end
+
 function Utils.IsInCombatInstance()
     local inInstance, instanceType = IsInInstance();
     return inInstance and instanceType ~= "neighborhood" and instanceType ~= "interior";

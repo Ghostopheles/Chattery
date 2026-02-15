@@ -16,6 +16,8 @@ ChatterySettingsFrameMixin = {};
 function ChatterySettingsFrameMixin:OnLoad()
     ButtonFrameTemplate_HidePortrait(self);
 
+    tinsert(UISpecialFrames, self:GetName());
+
     local titleText = _G[self:GetName() .. "TitleText"];
     titleText:SetFontObject(GameFontWhite);
 

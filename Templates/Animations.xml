@@ -1,0 +1,15 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.blizzard.com/wow/ui/ https://raw.githubusercontent.com/Meorawr/wow-ui-schema/main/UI.xsd">
+
+    <Include file="Animations.lua"/>
+
+    <AnimationGroup name="ChatterySlideInAnimTemplate" mixin="ChatterySlideInAnimMixin" virtual="true" looping="NONE" setToFinalAlpha="true">
+        <Alpha parentKey="AlphaAnim" duration="0.075" fromAlpha="0" toAlpha="1" smoothing="IN"/>
+        <Translation parentKey="TranslateAnim" duration="0.075" smoothing="IN" />
+        <Scripts>
+            <OnLoad method="OnLoad"/>
+            <OnFinished method="OnFinished"/>
+        </Scripts>
+    </AnimationGroup>
+
+</Ui>

@@ -36,3 +36,7 @@ Core/Settings.lua
 Core/Tokenizer.lua
 Core/Chunker.lua
 Core/ChatManager.lua
+
+Templates/Animations.xml
+Templates/SettingControl.xml
+Templates/SettingsFrame.xml

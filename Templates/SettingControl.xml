@@ -1,0 +1,37 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.blizzard.com/wow/ui/ https://raw.githubusercontent.com/Meorawr/wow-ui-schema/main/UI.xsd">
+    <Include file="SettingControl.lua" />
+
+    <Frame name="ChatterySettingContainerTemplate" mixin="ChatterySettingContainerMixin" virtual="true">
+        <Animations>
+            <AnimationGroup parentKey="Anim" inherits="ChatterySlideInAnimTemplate"/>
+        </Animations>
+
+        <Scripts>
+            <OnShow method="OnShow"/>
+            <OnHide method="OnHide"/>
+        </Scripts>
+    </Frame>
+
+    <Frame name="ChatterySettingControlTemplate" mixin="ChatterySettingControlMixin" virtual="true">
+        <Scripts>
+            <OnShow method="OnShow"/>
+            <OnHide method="OnHide"/>
+        </Scripts>
+    </Frame>
+
+    <EditBox name="ChatterySettingControlEditboxTemplate" mixin="ChatterySettingControlEditboxMixin" inherits="ChatterySettingControlTemplate,InputBoxTemplate" autoFocus="false" virtual="true">
+        <Size x="100" y="32"/>
+
+        <Scripts>
+            <OnTextChanged method="OnTextChanged"/>
+            <OnEnterPressed method="OnEnterPressed"/>
+        </Scripts>
+    </EditBox>
+
+    <CheckButton name="ChatterySettingControlCheckboxTemplate" mixin="ChatterySettingControlCheckboxMixin" inherits="ChatterySettingControlTemplate,UICheckButtonTemplate" virtual="true">
+        <Scripts>
+            <OnClick method="OnClick"/>
+        </Scripts>
+    </CheckButton>
+</Ui>

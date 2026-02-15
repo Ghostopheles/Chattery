@@ -205,7 +205,10 @@ function Chunker.SplitMessage(message, chunkSize)
                 end
 
                 current = current .. part;
-                UpdateDelimStack(part, rpDelimStack);
+
+                if handleRPSyntax then
+                    UpdateDelimStack(part, rpDelimStack);
+                end
             end
         end
     end

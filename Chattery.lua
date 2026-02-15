@@ -29,41 +29,14 @@ end
 
 ------------
 
-local EDITBOXES;
-local function GetRelevantEditBoxes()
-    if EDITBOXES then
-        return EDITBOXES;
-    end
-
-    EDITBOXES = {};
-    for i=1, NUM_CHAT_WINDOWS do
-        local name = format("ChatFrame%dEditBox", i);
-        local eb = _G[name];
-        if eb then
-            tinsert(EDITBOXES, eb);
-        end
-    end
-
-    return EDITBOXES;
-end
-
-local function HookEditBoxes(script, callback)
-    local editBoxes = GetRelevantEditBoxes();
-    for _, eb in pairs(editBoxes) do
-        eb:HookScript(script, callback);
-    end
-end
-
-------------
-
 local EDITBOX_DEFAULTS = {};
 
 ---@class Chattery
 Chattery = {};
 
 function Chattery.Init()
-    HookEditBoxes("OnShow", Chattery.OnEditBoxShow);
-    HookEditBoxes("OnEnterPressed", Chattery.OnEditBoxEnterPressed);
+	EventRegistry:RegisterCallback("ChatFrame.OnEditBoxShow", Chattery.OnEditBoxShow);
+	EventRegistry:RegisterCallback("ChatFrame.OnEditBoxHide", Chattery.OnEditBoxHide);
 
     Events, Registry, Utils = Chattery.Events, Chattery.EventRegistry, Chattery.Utils;
     Registry:RegisterCallback(Events.SHOW_HARDWARE_INPUT_PROMPT, Chattery.PromptForHardwareInput);
@@ -86,7 +59,7 @@ function Chattery.SetEditBoxToDefaults(editBox)
 end
 
 ---@param editBox EditBox
-function Chattery.OnEditBoxShow(editBox)
+function Chattery.OnEditBoxShow(_, editBox)
     if not Chattery.ShouldHandleEditBox() then
         Chattery.SetEditBoxToDefaults(editBox);
         return;
@@ -105,18 +78,8 @@ function Chattery.OnEditBoxShow(editBox)
     editBox:SetVisibleTextByteLimit(0);
 end
 
-function Chattery.OnEditBoxEnterPressed(editBox)
+function Chattery.OnEditBoxHide()
     if HW_PROMPT_ACTIVE then
-        if ACTIVE_CHAT_EDIT_BOX == editBox then
-            if editBox:GetText() ~= "/" then
-                editBox:Hide();
-            end
-        end
-
-        if CHAT_FOCUS_OVERRIDE then
-            CHAT_FOCUS_OVERRIDE:ClearFocus();
-        end
-
         Chattery.ChatManager.ContinueFromPrompt();
     end
 end

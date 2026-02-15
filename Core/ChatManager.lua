@@ -44,6 +44,10 @@ function QueueHandler:Start()
 
     self.Running = true;
     self.Ticker = C_Timer.NewTicker(TICK_PERIOD, function() self:Tick() end, #self.MessageQueue);
+
+	if HARDWARE_INPUT then
+		self:Tick();
+	end
 end
 
 function QueueHandler:Tick()
@@ -90,8 +94,7 @@ function QueueHandler:UpdateBandwidth()
 end
 
 function QueueHandler:DoesChatTypeRequireHardwareInput(chatType)
-    return Utils.IsInCombatInstance() and HARDWARE_RESTRICTED_CHAT_TYPES[chatType];
-
+    return not Utils.IsInCombatInstance() and HARDWARE_RESTRICTED_CHAT_TYPES[chatType];
 end
 
 function QueueHandler:TrySendMessage(entry)
@@ -209,6 +212,12 @@ function ChatManager.OnEditBoxParseText(editBox, send)
     local chunks = Chunker.SplitMessage(message, chunkSize);
     -- can just send the first chunk immediately by changing the editBox text
     editBox:SetText(chunks[1]);
+
+	-- cancel out the hardware input flag since it'll be consumed before the queue starts queuing
+	if QueueHandler:DoesChatTypeRequireHardwareInput(chatType) then
+		HARDWARE_INPUT = false;
+	end
+
     for i = 2, #chunks do -- skipping first index because of above
         local chunk = chunks[i];
         QueueHandler:QueueMessage(chunk, chatType, language, chatTarget);

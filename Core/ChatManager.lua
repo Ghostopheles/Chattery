@@ -1,6 +1,6 @@
 local Events = Chattery.Events;
 local Registry = Chattery.EventRegistry;
-local Tokenizer = Chattery.Tokenizer;
+local Chunker = Chattery.Chunker;
 local Utils = Chattery.Utils;
 
 local HARDWARE_INPUT = false;
@@ -156,196 +156,12 @@ local UNSUPPORTED_CHAT_TYPES = Chattery.Constants.UNSUPPORTED_CHAT_TYPES;
 ---@class ChatteryChatManager
 local ChatManager = {};
 
-function ChatManager.GetPaddingText()
-    return MSG_PREFIX, MSG_SUFFIX;
-end
-
-function ChatManager.SetPadding(prefix, suffix)
-    if prefix then
-        MSG_PREFIX = prefix;
-    end
-
-    if suffix then
-        MSG_SUFFIX = suffix;
-    end
-end
-
 function ChatManager.ShouldHandleChat(chatType)
     if UNSUPPORTED_CHAT_TYPES[chatType] or Utils.IsInChatLockdown() then
         return false;
     end
 
     return true;
-end
-
-function ChatManager.GetMessageSplitMarker()
-    return Chattery.Settings.GetSetting(Chattery.Setting.SplitMarker);
-end
-
-function ChatManager.ShouldShowMessageIndex()
-    return Chattery.Settings.GetSetting(Chattery.Setting.ShowMessageIndex);
-end
-
-function ChatManager.ShouldHandleRPSyntax()
-    return Chattery.Settings.GetSetting(Chattery.Setting.HandleRPSyntax);
-end
-
-function ChatManager.SplitMessageByWords(message)
-    local parts = {};
-
-    for word, spaces in message:gmatch("(%S+)(%s*)") do
-        tinsert(parts, word .. spaces);
-    end
-
-    return parts;
-end
-
-function ChatManager.SplitMessage(message, chunkSize)
-    chunkSize = chunkSize or CHUNK_SIZES.Default;
-
-    local prefix, suffix = ChatManager.GetPaddingText();
-    local suffixSize = #suffix;
-
-    local prefixes = {};
-    local rawChunks = {};
-    local current = "";
-
-    local splitMarker = ChatManager.GetMessageSplitMarker();
-    local handleRPSyntax = ChatManager.ShouldHandleRPSyntax();
-
-    local function maxOverhead()
-        local index = #rawChunks + 1;
-        local newPrefix;
-        if ChatManager.ShouldShowMessageIndex() then
-            newPrefix = format("[%d] ", index);
-        else
-            newPrefix = prefix;
-        end
-
-        tinsert(prefixes, index, newPrefix);
-        local paddingSize = #newPrefix + suffixSize + (2 * #splitMarker) + 1;
-        return paddingSize;
-    end
-
-    local function usableLength()
-        local overhead = maxOverhead();
-        return chunkSize - overhead;
-    end
-
-    local in_rp_syntax_context;
-    local rp_syntax_active_char;
-    local rp_syntax_reopen_next;
-
-    local function resetRPSyntaxState()
-        in_rp_syntax_context = false;
-        rp_syntax_active_char = nil;
-        rp_syntax_reopen_next = nil;
-    end
-
-    local function updateRPSyntaxState(text)
-        if not handleRPSyntax then
-            return;
-        end
-
-        for i = 1, #text do
-            local c = text:sub(i, i)
-
-            if RP_SYNTAX_SPECIAL_CHARS[c] then
-                if not in_rp_syntax_context then
-                    in_rp_syntax_context = true;
-                    rp_syntax_active_char = c;
-                elseif rp_syntax_active_char == c then
-                    in_rp_syntax_context = false;
-                    rp_syntax_active_char = nil;
-                end
-            end
-        end
-    end
-
-    local function flushRaw()
-        if #current == 0 then
-            return;
-        end
-
-        local out = current;
-
-        if in_rp_syntax_context then
-            out = strtrim(out, " ") .. rp_syntax_active_char;
-            rp_syntax_reopen_next = rp_syntax_active_char;
-        else
-            resetRPSyntaxState();
-        end
-
-        tinsert(rawChunks, out);
-
-        current = "";
-    end
-
-    local function appendText(part, isLink)
-        if rp_syntax_reopen_next and #current == 0 then
-            current = rp_syntax_reopen_next;
-        end
-
-        current = current .. part;
-        if not isLink then
-            updateRPSyntaxState(part);
-        end
-    end
-
-    local tokens = Tokenizer:Tokenize(message);
-    for _, token in ipairs(tokens) do
-        local text = token.Value;
-        if token.Type == Tokenizer.TOKEN_TYPE.Link then
-            local _, _, displayText = LinkUtil.ExtractLink(text);
-            local visibleLength = #displayText;
-            if #current + visibleLength > usableLength() then
-                flushRaw();
-            end
-            local isLink = true;
-            appendText(text, isLink);
-        else
-            local parts = ChatManager.SplitMessageByWords(token.Value);
-            for _, part in ipairs(parts) do
-                local partLength = #part;
-                if #current + partLength <= usableLength() then
-                    appendText(part);
-                else
-                    flushRaw();
-                    if partLength <= usableLength() then
-                        appendText(part);
-                    else
-                        local pos = 1;
-                        while pos <= #part do
-                            local take = min(usableLength(), #part - pos + 1);
-                            local newPart = part:sub(pos, pos + take - 1);
-                            appendText(newPart);
-                            flushRaw();
-                            pos = pos + take;
-                        end
-                    end
-                end
-            end
-        end
-    end
-
-    flushRaw();
-
-    local finalChunks = {};
-    local numFinalChunks = #rawChunks;
-
-    for i, content in ipairs(rawChunks) do
-        local startMarker = (i > 1) and (splitMarker .. " ") or "";
-        local endMarker = (i < numFinalChunks) and splitMarker or "";
-
-        if strbyte(content, -1) ~= 32 then
-            content = content .. " ";
-        end
-
-        local chunk = prefixes[i] .. startMarker .. content .. endMarker .. suffix;
-        tinsert(finalChunks, chunk);
-    end
-
-    return finalChunks;
 end
 
 function ChatManager.ContinueFromPrompt()
@@ -398,7 +214,8 @@ function ChatManager.OnEditBoxParseText(editBox, send)
 
     local language = editBox.languageID;
 
-    local chunks = ChatManager.SplitMessage(message, chunkSize);
+    local results, chunks = C_AddOnProfiler.MeasureCall(Chunker.SplitMessage, message, chunkSize);
+    DevTool:AddData(results);
     -- can just send the first chunk immediately by changing the editBox text
     editBox:SetText(chunks[1]);
     for i = 2, #chunks do -- skipping first index because of above

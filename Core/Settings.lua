@@ -22,7 +22,7 @@ if not ChatteryConfig then
 else
     for setting, value in pairs(defaultConfig) do
         if ChatteryConfig[setting] == nil then
-            ChatteryConfig[setting] = value
+            ChatteryConfig[setting] = value;
         end
     end
 end

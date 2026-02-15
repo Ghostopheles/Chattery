@@ -29,6 +29,7 @@
 
 Chattery.lua
 
+Core/Constants.lua
 Core/Utils.lua
 Core/Events.lua
 Core/Settings.lua

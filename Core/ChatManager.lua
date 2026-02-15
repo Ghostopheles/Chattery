@@ -150,40 +150,8 @@ end);
 
 ------------
 
----@enum
-local CHUNK_SIZES = {
-    Default = 255,
-    Extended = 400
-};
-
----@enum
-local CHAT_TYPE_TO_CHUNK_SIZE = {
-    SAY = CHUNK_SIZES.Default,
-    EMOTE = CHUNK_SIZES.Default,
-    YELL = CHUNK_SIZES.Default,
-    CHANNEL = CHUNK_SIZES.Default,
-    PARTY = CHUNK_SIZES.Default,
-    RAID = CHUNK_SIZES.Default,
-    RAID_WARNING = CHUNK_SIZES.Default,
-    INSTANCE_CHAT = CHUNK_SIZES.Default,
-    GUILD = CHUNK_SIZES.Default,
-    OFFICER = CHUNK_SIZES.Default,
-    WHISPER = CHUNK_SIZES.Default,
-    VOICE_TEXT = CHUNK_SIZES.Default,
-    BN_WHISPER = CHUNK_SIZES.Extended
-};
-
----@enum
-local UNSUPPORTED_CHAT_TYPES = {
-    CHANNEL = true,
-    VOICE_TEXT = true,
-};
-
-local MSG_PREFIX, MSG_SUFFIX = "", "";
-
-local RP_SYNTAX_SPECIAL_CHARS = {
-    ['"'] = true
-};
+local CHAT_TYPE_TO_CHUNK_SIZE = Chattery.Constants.CHAT_TYPE_TO_CHUNK_SIZE;
+local UNSUPPORTED_CHAT_TYPES = Chattery.Constants.UNSUPPORTED_CHAT_TYPES;
 
 ---@class ChatteryChatManager
 local ChatManager = {};

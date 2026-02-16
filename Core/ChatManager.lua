@@ -113,7 +113,10 @@ function QueueHandler:TrySendMessage(entry)
     BANDWIDTH = BANDWIDTH - messageSize;
 
     if entry.ChatType == BNET_CHAT_TYPE then
-        C_BattleNet.SendWhisper(entry.Target, entry.Message);
+		local bnetAccountID = BNet_GetBNetIDAccount(entry.Target);
+		if bnetAccountID then
+        	C_BattleNet.SendWhisper(bnetAccountID, entry.Message);
+		end
     else
         C_ChatInfo.SendChatMessage(entry.Message, entry.ChatType, entry.LanguageOrClubID, entry.Target);
     end
@@ -166,15 +169,6 @@ function ChatManager.ContinueFromPrompt()
     QueueHandler:Start(forceTick);
 end
 
-function ChatManager.GetBNetAccountIDForTarget(targetName)
-    for i=1, BNGetNumFriends() do
-        local accountInfo = C_BattleNet.GetFriendAccountInfo(i);
-        if accountInfo and (accountInfo.accountName == targetName) then
-            return accountInfo.bnetAccountID;
-        end
-    end
-end
-
 local TARGET_EDIT_BOX, TEXT_BEFORE_PARSE;
 
 ---@param editBox EditBox
@@ -198,14 +192,9 @@ function ChatManager.OnEditBoxParseText(_, editBox)
 
     HARDWARE_INPUT = true;
 
-    local chatTarget;
-    if chatType == BNET_CHAT_TYPE then
-        chatTarget = ChatManager.GetBNetAccountIDForTarget(chatTarget);
-    else
-        chatTarget = editBox:GetTellTarget() or editBox:GetChannelTarget();
-        if chatTarget == 0 then
-            chatTarget = nil;
-        end
+    local chatTarget = editBox:GetTellTarget() or editBox:GetChannelTarget();
+    if chatTarget == 0 then
+        chatTarget = nil;
     end
 
     local language = editBox.languageID;

@@ -37,7 +37,7 @@ local QueueHandler = {
     MessageQueue = {},
 };
 
-function QueueHandler:Start()
+function QueueHandler:Start(forceTick)
     if self.Running then
         return;
     end
@@ -45,7 +45,7 @@ function QueueHandler:Start()
     self.Running = true;
     self.Ticker = C_Timer.NewTicker(TICK_PERIOD, function() self:Tick() end, #self.MessageQueue);
 
-	if HARDWARE_INPUT then
+	if forceTick then
 		self:Tick();
 	end
 end
@@ -161,7 +161,9 @@ end
 
 function ChatManager.ContinueFromPrompt()
     HARDWARE_INPUT = true;
-    QueueHandler:Start();
+
+	local forceTick = true;
+    QueueHandler:Start(forceTick);
 end
 
 function ChatManager.GetBNetAccountIDForTarget(targetName)
@@ -176,10 +178,9 @@ end
 local TARGET_EDIT_BOX, TEXT_BEFORE_PARSE;
 
 ---@param editBox EditBox
----@param send number
-function ChatManager.OnEditBoxParseText(editBox, send)
+function ChatManager.OnEditBoxParseText(_, editBox)
     local message = editBox:GetText();
-    if not message or message == "" or send ~= 1 then
+    if not message or message == "" then
         return;
     end
 
@@ -237,10 +238,7 @@ end
 
 ------------
 
-for i = 1, Constants.ChatFrameConstants.MaxChatWindows do
-    local name = "ChatFrame" .. i .. "EditBox";
-    hooksecurefunc(_G[name], "ParseText", ChatManager.OnEditBoxParseText);
-end
+EventRegistry:RegisterCallback("ChatFrame.OnEditBoxPreSendText", ChatManager.OnEditBoxParseText);
 
 C_Timer.After(2, function()
     hooksecurefunc(ChatFrameUtil, "SubstituteChatMessageBeforeSend", ChatManager.OnSubstituteChatMessageBeforeSend);

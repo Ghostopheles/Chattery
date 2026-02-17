@@ -158,7 +158,7 @@ function QueueHandler:QueueMessage(message, chatType, languageOrClubID, target)
     tinsert(self.MessageQueue, msgEntry);
 end
 
-function QueueHandler:OnChatMessageReceived(text, playerName)
+function QueueHandler:OnChatMessageReceived(_, playerName)
 	if #self.MessageQueue < 1 or not self.Waiting then
 		return;
 	end
@@ -175,7 +175,13 @@ local events = {
 	"CHAT_MSG_SAY",
 	"CHAT_MSG_EMOTE",
 	"CHAT_MSG_YELL",
-	"CHAT_MSG_CHANNEL"
+	"CHAT_MSG_PARTY",
+	"CHAT_MSG_PARTY_LEADER",
+	"CHAT_MSG_RAID",
+	"CHAT_MSG_RAID_LEADER",
+	"CHAT_MSG_RAID_WARNING",
+	"CHAT_MSG_INSTANCE_CHAT",
+	"CHAT_MSG_INSTANCE_CHAT_LEADER"
 };
 
 local eventFrame = CreateFrame("Frame");

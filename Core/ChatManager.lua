@@ -87,8 +87,8 @@ Registry:RegisterCallback(Events.MESSAGE_SENT, QueueHandler.OnMessageSent, Queue
 function QueueHandler:Wait(throttle)
 	self.Waiting = true;
 
-	local timeout = throttle and 2 or 5;
-	Registry:TriggerEvent(Events.SHOW_WAITING_MESSAGE, timeout);
+	local timeout = throttle and 2 or 1;
+	Registry:TriggerEvent(Events.SHOW_WAITING_MESSAGE, timeout * #self.MessageQueue);
 	C_Timer.After(timeout, function() self:Start(true) end);
 end
 

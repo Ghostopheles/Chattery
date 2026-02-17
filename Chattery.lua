@@ -88,9 +88,8 @@ EventUtil.ContinueOnAddOnLoaded("Chattery", Chattery.Init);
 
 function Chattery.PromptForHardwareInput()
     if HW_PROMPT_ACTIVE then
-        print("Chattery: There's a problem here and it's not properly handled, too bad!");
+		--- FIXME: this is probably a bug if it ever triggers
         Chattery.HidePromptForHardwareInput();
-        return;
     end
 
     ShowHardwarePrompt();

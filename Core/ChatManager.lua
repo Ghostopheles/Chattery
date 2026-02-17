@@ -7,11 +7,11 @@ local HARDWARE_INPUT = false;
 local WAITING_FOR_HARDWARE_INPUT = false;
 
 local MESSAGE_COUNTER = 0;
-local HIDE_THROTTLE_MESSAGE = true; -- make this a setting probably
+local HIDE_THROTTLE_MESSAGE = false; -- make this a setting probably
 
 local THROTTLE_BYTES_PER_SECOND = 1000;
 local THROTTLE_BURST_BYTES_PER_SECOND = 2000;
-local TICK_PERIOD = 0.25;
+local TICK_PERIOD = 1;
 
 local BANDWIDTH = 0;
 local BANDWIDTH_TIME = GetTime();
@@ -38,12 +38,13 @@ local QueueHandler = {
 };
 
 function QueueHandler:Start(forceTick)
-    if self.Running then
+    if self.Running or #self.MessageQueue < 1 then
         return;
     end
 
+	self.Waiting = false;
     self.Running = true;
-    self.Ticker = C_Timer.NewTicker(TICK_PERIOD, function() self:Tick() end, #self.MessageQueue);
+    self.Ticker = C_Timer.NewTicker(TICK_PERIOD, function() self:Tick() end);
 
 	if forceTick then
 		self:Tick();
@@ -51,31 +52,50 @@ function QueueHandler:Start(forceTick)
 end
 
 function QueueHandler:Tick()
-    if not self.Running then
+    if not self.Running or self.Waiting then
         return;
     end
+
+	Registry:TriggerEvent(Events.HIDE_HARDWARE_INPUT_PROMPT);
 
     local entry = self.MessageQueue[1];
     if entry then
         local err = self:TrySendMessage(entry);
         if err == MESSAGE_SEND_ERR.SUCCESS then
-            tremove(self.MessageQueue, 1);
-            HARDWARE_INPUT = false;
-            if WAITING_FOR_HARDWARE_INPUT then
-                Registry:TriggerEvent(Events.HIDE_HARDWARE_INPUT_PROMPT);
-                WAITING_FOR_HARDWARE_INPUT = false;
-            end
+			self:Wait();
         elseif err == MESSAGE_SEND_ERR.WAIT then
-
+			self:Wait(true);
         elseif err == MESSAGE_SEND_ERR.PROMPT then
             Registry:TriggerEvent(Events.SHOW_HARDWARE_INPUT_PROMPT);
-            self:Stop();
+            self:Wait();
         end
     end
 
     if #self.MessageQueue == 0 then
         self:Stop();
     end
+end
+
+function QueueHandler:OnMessageSent()
+	tremove(self.MessageQueue, 1);
+	if WAITING_FOR_HARDWARE_INPUT then
+		WAITING_FOR_HARDWARE_INPUT = false;
+	end
+	self.Waiting = false;
+end
+
+Registry:RegisterCallback(Events.MESSAGE_SENT, QueueHandler.OnMessageSent, QueueHandler);
+
+function QueueHandler:Wait(throttle)
+	self.Waiting = true;
+
+	local timeout = throttle and 2 or 5;
+	C_Timer.After(timeout, function() self:Start(true) end);
+end
+
+function QueueHandler:Resume()
+	self.Waiting = false;
+	self:Tick();
 end
 
 function QueueHandler:Stop()
@@ -120,7 +140,7 @@ function QueueHandler:TrySendMessage(entry)
     else
         C_ChatInfo.SendChatMessage(entry.Message, entry.ChatType, entry.LanguageOrClubID, entry.Target);
     end
-    Registry:TriggerEvent(Events.MESSAGE_SENT, entry);
+	HARDWARE_INPUT = false;
     return MESSAGE_SEND_ERR.SUCCESS;
 end
 
@@ -138,11 +158,39 @@ function QueueHandler:QueueMessage(message, chatType, languageOrClubID, target)
     tinsert(self.MessageQueue, msgEntry);
 end
 
+function QueueHandler:OnChatMessageReceived(text, playerName)
+	if #self.MessageQueue < 1 or not self.Waiting then
+		return;
+	end
+
+	local name, realm = UnitFullName("player");
+	if playerName == format("%s-%s", name, realm) then
+		Registry:TriggerEvent(Events.MESSAGE_SENT);
+	end
+end
+
+------------
+
+local events = {
+	"CHAT_MSG_SAY",
+	"CHAT_MSG_EMOTE",
+	"CHAT_MSG_YELL",
+	"CHAT_MSG_CHANNEL"
+};
+
+local eventFrame = CreateFrame("Frame");
+eventFrame:SetScript("OnEvent", function(self, event, ...)
+	QueueHandler:OnChatMessageReceived(...);
+end);
+
+FrameUtil.RegisterFrameForEvents(eventFrame, events);
+
 ------------
 
 ChatFrameUtil.AddMessageEventFilter("CHAT_MSG_SYSTEM", function(_, _, message)
-    if HIDE_THROTTLE_MESSAGE and message == ERR_CHAT_THROTTLED then
-        return true;
+    if message == ERR_CHAT_THROTTLED and QueueHandler.Running then
+		QueueHandler:Wait(true);
+        return HIDE_THROTTLE_MESSAGE;
     end
 end);
 
@@ -165,8 +213,8 @@ end
 function ChatManager.ContinueFromPrompt()
     HARDWARE_INPUT = true;
 
-	local forceTick = true;
-    QueueHandler:Start(forceTick);
+	Registry:TriggerEvent(Events.HIDE_HARDWARE_INPUT_PROMPT);
+	QueueHandler:Resume();
 end
 
 local TARGET_EDIT_BOX, TEXT_BEFORE_PARSE;

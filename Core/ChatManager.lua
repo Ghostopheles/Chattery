@@ -56,8 +56,6 @@ function QueueHandler:Tick()
         return;
     end
 
-	Registry:TriggerEvent(Events.HIDE_HARDWARE_INPUT_PROMPT);
-
     local entry = self.MessageQueue[1];
     if entry then
         local err = self:TrySendMessage(entry);
@@ -90,10 +88,15 @@ function QueueHandler:Wait(throttle)
 	self.Waiting = true;
 
 	local timeout = throttle and 2 or 5;
+	Registry:TriggerEvent(Events.SHOW_WAITING_MESSAGE, timeout);
 	C_Timer.After(timeout, function() self:Start(true) end);
 end
 
 function QueueHandler:Resume()
+	if not self.Running then
+		return;
+	end
+
 	self.Waiting = false;
 	self:Tick();
 end
@@ -101,6 +104,8 @@ end
 function QueueHandler:Stop()
     self.Running = false;
     self.Ticker:Cancel();
+	Registry:TriggerEvent(Events.HIDE_HARDWARE_INPUT_PROMPT);
+	Registry:TriggerEvent(Events.HIDE_WAITING_MESSAGE);
 end
 
 function QueueHandler:UpdateBandwidth()

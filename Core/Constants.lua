@@ -30,6 +30,13 @@ ChatteryConstants.UNSUPPORTED_CHAT_TYPES = {
     VOICE_TEXT = true,
 };
 
+---@enum ChatteryNotificationType
+ChatteryConstants.NOTIFICATION_TYPE = {
+	HARDWARE_PROMPT = 1,
+	WAITING_FOR_THROTTLE = 2,
+	MESSAGE_THROTTLED = 3,
+};
+
 ------------
 
 Chattery.Constants = ChatteryConstants;

@@ -12,4 +12,15 @@
         </Scripts>
     </AnimationGroup>
 
+	<AnimationGroup name="ChatterySpinnerAnimTemplate" mixin="ChatterySpinnerAnimMixin" virtual="true" looping="REPEAT">
+        <Rotation parentKey="RotationAnim" smoothing="IN_OUT" duration="0.75" degrees="-360">
+			<Origin point="CENTER"/>
+		</Rotation>
+        <Scripts>
+            <OnLoad method="OnLoad"/>
+			<OnUpdate method="OnUpdate"/>
+            <OnPlay method="OnPlay"/>
+        </Scripts>
+    </AnimationGroup>
+
 </Ui>

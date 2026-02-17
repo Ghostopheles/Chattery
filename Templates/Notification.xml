@@ -1,0 +1,62 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.blizzard.com/wow/ui/ https://raw.githubusercontent.com/Meorawr/wow-ui-schema/main/UI.xsd">
+    <Include file="Notification.lua" />
+
+	<Frame name="ChatteryNotificationFrame" parent="UIParent" mixin="ChatteryNotificationFrameMixin" hidden="true">
+        <Size x="400" y="28"/>
+        <Anchors>
+            <Anchor point="CENTER"/>
+        </Anchors>
+
+        <Animations>
+            <AnimationGroup parentKey="Anim" inherits="ChatterySlideInAnimTemplate"/>
+        </Animations>
+
+		<Layers>
+			<Layer level="OVERLAY">
+				<FontString parentKey="Text" font="GameFontWhiteLarge">
+					<Anchors>
+						<Anchor point="CENTER"/>
+					</Anchors>
+				</FontString>
+				<Texture parentKey="Spinner" alphaMode="ADD" atlas="UF-Essence-Spinner">
+					<Size x="25" y="25"/>
+					<Anchors>
+						<Anchor point="RIGHT" relativeKey="$parent.Text" relativePoint="LEFT" x="-5"/>
+					</Anchors>
+					<Animations>
+						<AnimationGroup parentKey="Anim" inherits="ChatterySpinnerAnimTemplate"/>
+					</Animations>
+				</Texture>
+			</Layer>
+
+			<Layer level="BACKGROUND">
+				<Texture parentKey="Background" atlas="quickjoin-toast-background" setAllPoints="true"/>
+			</Layer>
+
+			<Layer level="BORDER">
+				<Texture parentKey="Lines" atlas="quickjoin-toast-lines">
+					<Anchors>
+						<Anchor point="TOPLEFT" y="-3"/>
+						<Anchor point="BOTTOMRIGHT" y="3"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+		</Layers>
+
+		<Frames>
+			<Button name="ChatteryHardwareButton" parentKey="HardwareButton">
+				<Scripts>
+					<OnClick>
+						CallMethodOnNearestAncestor(self, "OnHardwareButtonClick");
+					</OnClick>
+				</Scripts>
+			</Button>
+		</Frames>
+
+        <Scripts>
+            <OnLoad method="OnLoad"/>
+			<OnHide method="OnHide"/>
+        </Scripts>
+    </Frame>
+</Ui>

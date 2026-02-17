@@ -33,6 +33,7 @@ Core/Constants.lua
 Core/Utils.lua
 Core/Events.lua
 Core/Settings.lua
+Core/Notifications.lua
 Core/Tokenizer.lua
 Core/Chunker.lua
 Core/ChatManager.lua
@@ -40,3 +41,4 @@ Core/ChatManager.lua
 Templates/Animations.xml
 Templates/SettingControl.xml
 Templates/SettingsFrame.xml
+Templates/Notification.xml

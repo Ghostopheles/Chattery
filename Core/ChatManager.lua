@@ -214,7 +214,7 @@ local UNSUPPORTED_CHAT_TYPES = Chattery.Constants.UNSUPPORTED_CHAT_TYPES;
 local ChatManager = {};
 
 function ChatManager.ShouldHandleChat(chatType)
-    if UNSUPPORTED_CHAT_TYPES[chatType] or Utils.IsInChatLockdown() then
+    if UNSUPPORTED_CHAT_TYPES[chatType] or Utils.IsInChatLockdown() or InCombatLockdown() then
         return false;
     end
 

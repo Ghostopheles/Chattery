@@ -17,7 +17,7 @@ function Chattery.Init()
 end
 
 function Chattery.ShouldHandleEditBox()
-    return not Utils.IsInChatLockdown();
+    return not InCombatLockdown() and not Utils.IsInChatLockdown();
 end
 
 function Chattery.SetEditBoxToDefaults(editBox)
@@ -38,7 +38,7 @@ function Chattery.OnEditBoxShow(_, editBox)
         return;
     end
 
-    if not EDITBOX_DEFAULTS[editBox] then
+	if not EDITBOX_DEFAULTS[editBox] then
         EDITBOX_DEFAULTS[editBox] = {
             MaxLetters = editBox:GetMaxLetters(),
             MaxBytes = editBox:GetMaxBytes(),

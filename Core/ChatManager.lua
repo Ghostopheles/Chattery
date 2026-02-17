@@ -7,7 +7,7 @@ local HARDWARE_INPUT = false;
 local WAITING_FOR_HARDWARE_INPUT = false;
 
 local MESSAGE_COUNTER = 0;
-local HIDE_THROTTLE_MESSAGE = false; -- make this a setting probably
+local HIDE_THROTTLE_MESSAGE = true; -- make this a setting probably
 
 local THROTTLE_BYTES_PER_SECOND = 1000;
 local THROTTLE_BURST_BYTES_PER_SECOND = 2000;

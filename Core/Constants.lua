@@ -1,13 +1,13 @@
 ---@class ChatteryConstants
 local ChatteryConstants = {};
 
----@enum
+---@enum ChatteryChunkSizes
 ChatteryConstants.CHUNK_SIZES = {
     Default = 255,
     Extended = 400
 };
 
----@enum
+---@enum ChatteryChatTypeToChunkSize
 ChatteryConstants.CHAT_TYPE_TO_CHUNK_SIZE = {
     SAY = ChatteryConstants.CHUNK_SIZES.Default,
     EMOTE = ChatteryConstants.CHUNK_SIZES.Default,
@@ -24,7 +24,7 @@ ChatteryConstants.CHAT_TYPE_TO_CHUNK_SIZE = {
     BN_WHISPER = ChatteryConstants.CHUNK_SIZES.Extended
 };
 
----@enum
+---@enum ChatteryUnsupportedChatTypes
 ChatteryConstants.UNSUPPORTED_CHAT_TYPES = {
     CHANNEL = true,
     VOICE_TEXT = true,

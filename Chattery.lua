@@ -13,7 +13,7 @@ Chattery = {};
 function Chattery.Init()
 	EventRegistry:RegisterCallback("ChatFrame.OnEditBoxShow", Chattery.OnEditBoxShow);
 
-   Utils = Chattery.Utils;
+	Utils = Chattery.Utils;
 end
 
 function Chattery.ShouldHandleEditBox()
@@ -56,7 +56,7 @@ function Chattery.OnEditBoxShow(_, editBox)
     editBox:SetVisibleTextByteLimit(0);
 end
 
-EventUtil.ContinueOnAddOnLoaded("Chattery", Chattery.Init);
+EventUtil.ContinueOnAddOnLoaded(addonName, Chattery.Init);
 
 function Chattery.GetAddonColor()
     return ADDON_COLOR;

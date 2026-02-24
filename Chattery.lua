@@ -11,7 +11,7 @@ local EDITBOX_DEFAULTS = {};
 Chattery = {};
 
 function Chattery.Init()
-	EventRegistry:RegisterCallback("ChatFrame.OnEditBoxShow", Chattery.OnEditBoxShow);
+	EventRegistry:RegisterCallback("ChatFrame.OnEditBoxFocusGained", Chattery.OnEditBoxFocusGained);
 
 	Utils = Chattery.Utils;
 end
@@ -32,7 +32,7 @@ function Chattery.SetEditBoxToDefaults(editBox)
 end
 
 ---@param editBox EditBox
-function Chattery.OnEditBoxShow(_, editBox)
+function Chattery.OnEditBoxFocusGained(_, editBox)
     if not Chattery.ShouldHandleEditBox() then
         Chattery.SetEditBoxToDefaults(editBox);
         return;

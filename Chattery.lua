@@ -47,7 +47,7 @@ function Chattery.OnEditBoxFocusGained(_, editBox)
     end
 
 	if ChatteryNotificationFrame:IsShown() then
-		ChatFrameUtil.DeactivateChat(editBox);
+		editBox:Hide();
 		return;
 	end
 

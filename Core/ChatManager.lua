@@ -86,10 +86,16 @@ Registry:RegisterCallback(Events.MESSAGE_SENT, QueueHandler.OnMessageSent, Queue
 
 function QueueHandler:Wait(throttle)
 	self.Waiting = true;
+	self.WaitGen = (self.WaitGen or 0) + 1;
+	local gen = self.WaitGen;
 
 	local timeout = throttle and 2 or 1;
 	Registry:TriggerEvent(Events.SHOW_WAITING_MESSAGE, timeout * #self.MessageQueue);
-	C_Timer.After(timeout, function() self:Start(true) end);
+	C_Timer.After(timeout, function()
+		if self.Running and self.WaitGen == gen then
+			self.Waiting = false;
+		end
+	end);
 end
 
 function QueueHandler:Resume()
@@ -169,7 +175,8 @@ function QueueHandler:OnChatMessageReceived(_, playerName)
 	end
 
 	local name, realm = UnitFullName("player");
-	if playerName == format("%s-%s", name, realm) then
+	local fullName = (realm and realm ~= "") and format("%s-%s", name, realm) or name;
+	if playerName == name or playerName == fullName then
 		Registry:TriggerEvent(Events.MESSAGE_SENT);
 	end
 end

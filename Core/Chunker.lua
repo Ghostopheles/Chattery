@@ -151,7 +151,7 @@ function Chunker.SplitMessage(message, chunkSize)
         end
 
         tinsert(prefixes, index, newPrefix);
-        local paddingSize = #newPrefix + suffixSize + (2 * #splitMarker) + 1;
+        local paddingSize = #newPrefix + suffixSize + (2 * #splitMarker) + 2;
         return paddingSize;
     end
 
@@ -162,6 +162,14 @@ function Chunker.SplitMessage(message, chunkSize)
 
     local rpDelimStack = {};
     local rpReopenStack = nil;
+
+    local function currentCloserSize()
+        local size = 0;
+        for _, delim in ipairs(rpDelimStack) do
+            size = size + #delim.close;
+        end
+        return size;
+    end
 
     local function flushRaw()
         if #current == 0 then
@@ -186,7 +194,7 @@ function Chunker.SplitMessage(message, chunkSize)
             local _, _, displayText = LinkUtil.ExtractLink(text);
             local visibleLength = #displayText;
 
-            if #current + visibleLength > usableLength() then
+            if #current + visibleLength + (handleRPSyntax and currentCloserSize() or 0) > usableLength() then
                 flushRaw();
             end
 
@@ -196,7 +204,7 @@ function Chunker.SplitMessage(message, chunkSize)
             for _, part in ipairs(parts) do
                 local partLength = #part;
 
-                if #current + partLength > usableLength() then
+                if #current + partLength + (handleRPSyntax and currentCloserSize() or 0) > usableLength() then
                     flushRaw();
                     if rpReopenStack then
                         current = PrependOpeners("", rpReopenStack);

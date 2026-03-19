@@ -141,22 +141,20 @@ function Chunker.SplitMessage(message, chunkSize)
     local splitMarker = Chunker.GetMessageSplitMarker();
     local handleRPSyntax = Chunker.ShouldHandleRPSyntax();
 
-    local function maxOverhead()
-        local index = #rawChunks + 1;
-        local newPrefix;
+    local function getPrefix(index)
         if Chunker.ShouldShowMessageIndex() then
-            newPrefix = format("[%d] ", index);
+            return format("[%d] ", index);
         else
-            newPrefix = prefix;
+            return prefix;
         end
-
-        tinsert(prefixes, index, newPrefix);
-        local paddingSize = #newPrefix + suffixSize + (2 * #splitMarker) + 2;
-        return paddingSize;
     end
 
     local function usableLength()
-        local overhead = maxOverhead();
+        local index = #rawChunks + 1;
+        local prefixSize = #getPrefix(index);
+        -- very conservative overhead padding
+        -- this is to guarantee that the chunk size never exceeds the message limit
+        local overhead = prefixSize + suffixSize + (2 * #splitMarker) + 2;
         return chunkSize - overhead;
     end
 
@@ -183,6 +181,7 @@ function Chunker.SplitMessage(message, chunkSize)
             rpReopenStack = CopyTable(rpDelimStack);
         end
 
+        tinsert(prefixes, getPrefix(#rawChunks + 1));
         tinsert(rawChunks, out);
         current = "";
     end

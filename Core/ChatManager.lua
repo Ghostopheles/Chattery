@@ -169,8 +169,18 @@ function QueueHandler:QueueMessage(message, chatType, languageOrClubID, target)
     tinsert(self.MessageQueue, msgEntry);
 end
 
-function QueueHandler:OnChatMessageReceived(_, playerName)
+local SELF_CONFIRMING_EVENTS = {
+	CHAT_MSG_WHISPER_INFORM = true,
+	CHAT_MSG_BN_WHISPER_INFORM = true,
+};
+
+function QueueHandler:OnChatMessageReceived(event, playerName)
 	if #self.MessageQueue < 1 or not self.Waiting then
+		return;
+	end
+
+	if SELF_CONFIRMING_EVENTS[event] then
+		Registry:TriggerEvent(Events.MESSAGE_SENT);
 		return;
 	end
 
@@ -202,7 +212,7 @@ local events = {
 
 local eventFrame = CreateFrame("Frame");
 eventFrame:SetScript("OnEvent", function(self, event, ...)
-	QueueHandler:OnChatMessageReceived(...);
+	QueueHandler:OnChatMessageReceived(event, ...);
 end);
 
 FrameUtil.RegisterFrameForEvents(eventFrame, events);

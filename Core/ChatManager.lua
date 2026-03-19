@@ -145,9 +145,13 @@ function QueueHandler:TrySendMessage(entry)
 
     if entry.ChatType == BNET_CHAT_TYPE then
 		local bnetAccountID = BNet_GetBNetIDAccount(entry.Target);
-		if bnetAccountID then
-        	C_BattleNet.SendWhisper(bnetAccountID, entry.Message);
+		if not bnetAccountID then
+			wipe(self.MessageQueue);
+			self:Stop();
+			print("|cff5865F2Chattery:|r Could not resolve BNet account for " .. tostring(entry.Target) .. ". Messages cancelled.");
+			return MESSAGE_SEND_ERR.SUCCESS; -- skip
 		end
+		C_BattleNet.SendWhisper(bnetAccountID, entry.Message);
     else
         C_ChatInfo.SendChatMessage(entry.Message, entry.ChatType, entry.LanguageOrClubID, entry.Target);
     end

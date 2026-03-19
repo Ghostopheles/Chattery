@@ -13,6 +13,9 @@ local THROTTLE_BYTES_PER_SECOND = 1000;
 local THROTTLE_BURST_BYTES_PER_SECOND = 2000;
 local TICK_PERIOD = 1;
 
+local FIRST_CHUNK_CONFIRMATION_TIMEOUT = 5;
+local FIRST_CHUNK_TIMER = nil;
+
 local BANDWIDTH = 0;
 local BANDWIDTH_TIME = GetTime();
 
@@ -37,18 +40,21 @@ local QueueHandler = {
     MessageQueue = {},
 };
 
-function QueueHandler:Start(forceTick)
+function QueueHandler:Start()
     if self.Running or #self.MessageQueue < 1 then
         return;
     end
 
-	self.Waiting = false;
+    self.Waiting = true;
     self.Running = true;
-    self.Ticker = C_Timer.NewTicker(TICK_PERIOD, function() self:Tick() end);
+    self.WaitingForFirstConfirmation = true;
 
-	if forceTick then
-		self:Tick();
-	end
+    FIRST_CHUNK_TIMER = C_Timer.NewTimer(FIRST_CHUNK_CONFIRMATION_TIMEOUT, function()
+        if self.Running and self.WaitingForFirstConfirmation then
+            wipe(self.MessageQueue);
+            self:Stop();
+        end
+    end);
 end
 
 function QueueHandler:Tick()
@@ -76,10 +82,18 @@ function QueueHandler:Tick()
 end
 
 function QueueHandler:OnMessageSent()
-	if WAITING_FOR_HARDWARE_INPUT then
-		WAITING_FOR_HARDWARE_INPUT = false;
-	end
-	self.Waiting = false;
+    if WAITING_FOR_HARDWARE_INPUT then
+        WAITING_FOR_HARDWARE_INPUT = false;
+    end
+    if self.WaitingForFirstConfirmation then
+        self.WaitingForFirstConfirmation = false;
+        if FIRST_CHUNK_TIMER then
+            FIRST_CHUNK_TIMER:Cancel();
+            FIRST_CHUNK_TIMER = nil;
+        end
+        self.Ticker = C_Timer.NewTicker(TICK_PERIOD, function() self:Tick() end);
+    end
+    self.Waiting = false;
 end
 
 Registry:RegisterCallback(Events.MESSAGE_SENT, QueueHandler.OnMessageSent, QueueHandler);
@@ -109,9 +123,17 @@ end
 
 function QueueHandler:Stop()
     self.Running = false;
-    self.Ticker:Cancel();
-	Registry:TriggerEvent(Events.HIDE_HARDWARE_INPUT_PROMPT);
-	Registry:TriggerEvent(Events.HIDE_WAITING_MESSAGE);
+    self.WaitingForFirstConfirmation = false;
+    if FIRST_CHUNK_TIMER then
+        FIRST_CHUNK_TIMER:Cancel();
+        FIRST_CHUNK_TIMER = nil;
+    end
+    if self.Ticker then
+        self.Ticker:Cancel();
+        self.Ticker = nil;
+    end
+    Registry:TriggerEvent(Events.HIDE_HARDWARE_INPUT_PROMPT);
+    Registry:TriggerEvent(Events.HIDE_WAITING_MESSAGE);
 end
 
 function QueueHandler:UpdateBandwidth()

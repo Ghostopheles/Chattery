@@ -60,6 +60,7 @@ function QueueHandler:Tick()
     if entry then
         local err = self:TrySendMessage(entry);
         if err == MESSAGE_SEND_ERR.SUCCESS then
+			tremove(self.MessageQueue, 1);
 			self:Wait();
         elseif err == MESSAGE_SEND_ERR.WAIT then
 			self:Wait(true);
@@ -75,7 +76,6 @@ function QueueHandler:Tick()
 end
 
 function QueueHandler:OnMessageSent()
-	tremove(self.MessageQueue, 1);
 	if WAITING_FOR_HARDWARE_INPUT then
 		WAITING_FOR_HARDWARE_INPUT = false;
 	end
@@ -211,8 +211,8 @@ local events = {
 };
 
 local eventFrame = CreateFrame("Frame");
-eventFrame:SetScript("OnEvent", function(self, event, ...)
-	QueueHandler:OnChatMessageReceived(event, ...);
+eventFrame:SetScript("OnEvent", function(_, event, _, playerName)
+	QueueHandler:OnChatMessageReceived(event, playerName);
 end);
 
 FrameUtil.RegisterFrameForEvents(eventFrame, events);

@@ -298,11 +298,13 @@ function ChatManager.OnEditBoxParseText(_, editBox)
 
     HARDWARE_INPUT = true;
 
+	---@diagnostic disable-next-line: undefined-field
     local chatTarget = editBox:GetTellTarget() or editBox:GetChannelTarget();
     if chatTarget == 0 then
         chatTarget = nil;
     end
 
+	---@diagnostic disable-next-line: undefined-field
     local language = editBox.languageID;
 
     local chunks = Chunker.SplitMessage(message, chunkSize, chatType);

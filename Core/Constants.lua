@@ -37,6 +37,11 @@ ChatteryConstants.NOTIFICATION_TYPE = {
 	MESSAGE_THROTTLED = 3,
 };
 
+---@enum ChatteryNPCChatTypes
+ChatteryConstants.NPC_CHAT_TYPES = {
+	EMOTE = 1
+};
+
 ------------
 
 Chattery.Constants = ChatteryConstants;

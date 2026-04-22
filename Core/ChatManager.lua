@@ -305,7 +305,7 @@ function ChatManager.OnEditBoxParseText(_, editBox)
 
     local language = editBox.languageID;
 
-    local chunks = Chunker.SplitMessage(message, chunkSize);
+    local chunks = Chunker.SplitMessage(message, chunkSize, chatType);
     -- can just send the first chunk immediately by changing the editBox text
     editBox:SetText(chunks[1]);
 

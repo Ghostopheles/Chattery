@@ -14,6 +14,8 @@ local function MakeDelim(startChar, endChar)
     };
 end
 
+local NPC_SPEECH_TOKEN = "|| ";
+
 ---@type ChatteryRPDelim[]
 local RP_SYNTAX_DELIMS = {
     MakeDelim('"'),
@@ -128,7 +130,11 @@ function Chunker.SplitMessageByWords(message)
     return parts;
 end
 
-function Chunker.SplitMessage(message, chunkSize)
+function Chunker.ShouldHandleNPCSpeech(chatType)
+	return Chattery.Settings.GetSetting(Chattery.Setting.HandleNPCSpeech) and Chattery.Constants.NPC_CHAT_TYPES[chatType] ~= nil;
+end
+
+function Chunker.SplitMessage(message, chunkSize, chatType)
     chunkSize = chunkSize or Chattery.Constants.CHUNK_SIZES.Default;
 
     local prefix, suffix = Chunker.GetPaddingText();
@@ -140,6 +146,12 @@ function Chunker.SplitMessage(message, chunkSize)
 
     local splitMarker = Chunker.GetMessageSplitMarker();
     local handleRPSyntax = Chunker.ShouldHandleRPSyntax();
+
+    local npcPrefix = "";
+    if Chunker.ShouldHandleNPCSpeech(chatType) and (message:sub(1, #NPC_SPEECH_TOKEN) == NPC_SPEECH_TOKEN) then
+        npcPrefix = NPC_SPEECH_TOKEN;
+        message = message:sub(#NPC_SPEECH_TOKEN + 1);
+    end
 
     local function getPrefix(index)
         if Chunker.ShouldShowMessageIndex() then
@@ -154,7 +166,7 @@ function Chunker.SplitMessage(message, chunkSize)
         local prefixSize = #getPrefix(index);
         -- very conservative overhead padding
         -- this is to guarantee that the chunk size never exceeds the message limit
-        local overhead = prefixSize + suffixSize + (2 * #splitMarker) + 2;
+        local overhead = prefixSize + suffixSize + (2 * #splitMarker) + #npcPrefix + 2;
         return chunkSize - overhead;
     end
 
@@ -233,10 +245,9 @@ function Chunker.SplitMessage(message, chunkSize)
             content = content .. " ";
         end
 
-        local chunk = prefixes[i] .. startMarker .. content .. endMarker .. suffix;
+        local chunk = prefixes[i] .. npcPrefix .. startMarker .. content .. endMarker .. suffix;
         tinsert(finalChunks, chunk);
     end
-
     return finalChunks;
 end
 

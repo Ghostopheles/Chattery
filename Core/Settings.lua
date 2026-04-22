@@ -8,25 +8,29 @@ local ChatterySettings = {};
 local Setting = {
     SplitMarker = "SplitMarker",
     ShowMessageIndex = "ShowMessageIndex",
-    HandleRPSyntax = "HandleRPSyntax"
+    HandleRPSyntax = "HandleRPSyntax",
+	HandleNPCSpeech = "HandleNPCSpeech"
 };
 
 local defaultConfig = {
     [Setting.SplitMarker] = "»",
     [Setting.ShowMessageIndex] = false,
     [Setting.HandleRPSyntax] = true,
+	[Setting.HandleNPCSpeech] = true
 };
 
 local configOrder = {
     Setting.SplitMarker,
     Setting.ShowMessageIndex,
-    Setting.HandleRPSyntax
+    Setting.HandleRPSyntax,
+	Setting.HandleNPCSpeech
 };
 
 local settingLabel = {
     [Setting.SplitMarker] = "Split Marker",
-    [Setting.ShowMessageIndex] = "Show Message Index";
-    [Setting.HandleRPSyntax] = "Handle RP Syntax";
+    [Setting.ShowMessageIndex] = "Show Message Index",
+    [Setting.HandleRPSyntax] = "Handle RP Syntax",
+	[Setting.HandleNPCSpeech] = "Handle NPC Speech",
 };
 
 if not ChatteryConfig then

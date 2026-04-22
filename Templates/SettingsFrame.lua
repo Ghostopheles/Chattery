@@ -60,21 +60,34 @@ function ChatterySettingsFrameMixin:Setup()
 
     self.Controls = {};
 
-    local function MakeContainer(labelText, control, index)
+    local function MakeContainer(text, control, index)
         local f = CreateFrame("Frame", nil, self.Content, "ChatterySettingContainerTemplate");
         f:SetAlpha(0);
         f:SetHeight(32);
         f:SetWidth(self:GetWidth() - 50);
         f.OrderIndex = index;
 
-        local str = f:CreateFontString(nil, "ARTWORK", "GameFontWhite");
-        str:SetPoint("LEFT", 5, 0);
-        str:SetText(labelText);
-        f.Label = str;
+		local hint = CreateFrame("Frame", nil, f, "ChatterySettingsHintTemplate");
+		hint:SetScript("OnEnter", function()
+			GameTooltip:SetOwner(hint, "ANCHOR_TOPLEFT");
+			GameTooltip_AddBodyLine(GameTooltip, text.Hint);
+			GameTooltip:Show();
+		end);
+		hint:SetScript("OnLeave", function()
+			GameTooltip:Hide();
+		end);
+		hint:SetPoint("LEFT", 5, 0);
 
         control:SetParent(f);
         control:SetPoint("RIGHT", f, "RIGHT", -5, 0);
         f.Control = control;
+
+		local str = f:CreateFontString(nil, "ARTWORK", "GameFontWhite");
+        str:SetPoint("LEFT", hint, "RIGHT", 5, 0);
+		str:SetPoint("RIGHT", control, -5, 0);
+        str:SetText(text.Label);
+		str:SetJustifyH("LEFT");
+        f.Label = str;
 
         return f;
     end
@@ -86,7 +99,7 @@ function ChatterySettingsFrameMixin:Setup()
         local control = CreateFrame(template.type, nil, nil, template.name);
         control:Bind(setting.name);
 
-        local container = MakeContainer(setting.label, control, i);
+        local container = MakeContainer(setting.text, control, i);
         tinsert(self.Controls, container);
     end
 

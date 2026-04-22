@@ -2,6 +2,10 @@ local Tokenizer = Chattery.Tokenizer;
 
 ------------
 
+local function GetSetting(setting)
+	return Chattery.Settings.GetSetting(setting);
+end
+
 ---@class ChatteryRPDelim
 ---@field open string
 ---@field close string
@@ -109,15 +113,15 @@ function Chunker.SetPadding(prefix, suffix)
 end
 
 function Chunker.GetMessageSplitMarker()
-    return Chattery.Settings.GetSetting(Chattery.Setting.SplitMarker);
+    return GetSetting(Chattery.Setting.SplitMarker);
 end
 
 function Chunker.ShouldShowMessageIndex()
-    return Chattery.Settings.GetSetting(Chattery.Setting.ShowMessageIndex);
+    return GetSetting(Chattery.Setting.ShowMessageIndex);
 end
 
 function Chunker.ShouldHandleRPSyntax()
-    return Chattery.Settings.GetSetting(Chattery.Setting.HandleRPSyntax);
+    return GetSetting(Chattery.Setting.HandleRPSyntax);
 end
 
 function Chunker.SplitMessageByWords(message)
@@ -131,7 +135,15 @@ function Chunker.SplitMessageByWords(message)
 end
 
 function Chunker.ShouldHandleNPCSpeech(chatType)
-	return Chattery.Settings.GetSetting(Chattery.Setting.HandleNPCSpeech) and Chattery.Constants.NPC_CHAT_TYPES[chatType] ~= nil;
+	return GetSetting(Chattery.Setting.HandleNPCSpeech) and Chattery.Constants.NPC_CHAT_TYPES[chatType] ~= nil;
+end
+
+function Chunker.ShouldHandleCapitalization()
+	return GetSetting(Chattery.Setting.HandleCapitalization);
+end
+
+function Chunker.ShouldHandlePunctuation()
+	return GetSetting(Chattery.Setting.HandleCapitalization);
 end
 
 function Chunker.SplitMessage(message, chunkSize, chatType)

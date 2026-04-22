@@ -2,8 +2,25 @@
     xsi:schemaLocation="http://www.blizzard.com/wow/ui/ https://raw.githubusercontent.com/Meorawr/wow-ui-schema/main/UI.xsd">
     <Include file="SettingsFrame.lua" />
 
+	<Frame name="ChatterySettingsHintTemplate" virtual="true" enableMouseMotion="true">
+		<Size x="24" y="24"/>
+		<Layers>
+			<Layer level="ARTWORK">
+				<Texture parentKey="Icon" file="Interface/common/help-i" setAllPoints="true"/>
+			</Layer>
+			<Layer level="HIGHLIGHT">
+				<Texture parentKey="Highlight" file="Interface/Minimap/UI-Minimap-ZoomButton-Highlight" alphaMode="ADD">
+					<Size x="24" y="24"/>
+					<Anchors>
+						<Anchor point="CENTER" x="-1" y="-1"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+		</Layers>
+	</Frame>
+
     <Frame name="ChatterySettingsFrame" parent="UIParent" mixin="ChatterySettingsFrameMixin" inherits="PortraitFrameFlatTemplate" movable="true" hidden="true">
-        <Size x="325" y="150"/>
+        <Size x="385" y="250"/>
         <Anchors>
             <Anchor point="CENTER"/>
         </Anchors>

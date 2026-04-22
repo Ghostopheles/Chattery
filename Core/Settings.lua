@@ -9,28 +9,54 @@ local Setting = {
     SplitMarker = "SplitMarker",
     ShowMessageIndex = "ShowMessageIndex",
     HandleRPSyntax = "HandleRPSyntax",
-	HandleNPCSpeech = "HandleNPCSpeech"
+	HandleNPCSpeech = "HandleNPCSpeech",
+	HandleCapitalization = "HandleCapitalization",
+	HandlePunctuation = "HandlePunctuation"
 };
 
 local defaultConfig = {
     [Setting.SplitMarker] = "»",
     [Setting.ShowMessageIndex] = false,
     [Setting.HandleRPSyntax] = true,
-	[Setting.HandleNPCSpeech] = true
+	[Setting.HandleNPCSpeech] = true,
+	[Setting.HandleCapitalization] = false,
+	[Setting.HandlePunctuation] = false,
 };
 
 local configOrder = {
     Setting.SplitMarker,
     Setting.ShowMessageIndex,
     Setting.HandleRPSyntax,
-	Setting.HandleNPCSpeech
+	Setting.HandleNPCSpeech,
+	Setting.HandleCapitalization,
+	Setting.HandlePunctuation
 };
 
-local settingLabel = {
-    [Setting.SplitMarker] = "Split Marker",
-    [Setting.ShowMessageIndex] = "Show Message Index",
-    [Setting.HandleRPSyntax] = "Handle RP Syntax",
-	[Setting.HandleNPCSpeech] = "Handle NPC Speech",
+local settingText = {
+    [Setting.SplitMarker] = {
+		Label = "Split Marker",
+		Hint = "Marker used to indicate a message has been split"
+	},
+    [Setting.ShowMessageIndex] = {
+		Label = "Show Message Index",
+		Hint = "Prepend message index to each message"
+	},
+    [Setting.HandleRPSyntax] = {
+		Label = "Handle RP Syntax",
+		Hint = "Preserves text formatting and coloring for RP syntax"
+	},
+	[Setting.HandleNPCSpeech] = {
+		Label = "Handle NPC Speech",
+		Hint = "Prepends the NPC speech token to the beginning of each message when speaking as an NPC"
+	},
+	[Setting.HandleCapitalization] = {
+		Label = "Auto-capitalize the start of the first message",
+		Hint = "Capitalizes the beginning of your first message if it's not already capitalized"
+	},
+	[Setting.HandlePunctuation] = {
+		Label = "Automatically add punctuation to the last message",
+		Hint = "Adds a period to the end of your last message if there's no punctuation present"
+	}
 };
 
 if not ChatteryConfig then
@@ -61,7 +87,7 @@ function ChatterySettings.GetAllSettings()
         tinsert(settings, {
             name = setting,
             type = defaultValueType,
-            label = settingLabel[setting]
+            text = settingText[setting],
         });
     end
     return settings;

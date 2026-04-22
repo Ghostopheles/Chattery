@@ -11,7 +11,8 @@ local Setting = {
     HandleRPSyntax = "HandleRPSyntax",
 	HandleNPCSpeech = "HandleNPCSpeech",
 	HandleCapitalization = "HandleCapitalization",
-	HandlePunctuation = "HandlePunctuation"
+	HandlePunctuation = "HandlePunctuation",
+	EnableUndo = "EnableUndo"
 };
 
 local defaultConfig = {
@@ -21,6 +22,7 @@ local defaultConfig = {
 	[Setting.HandleNPCSpeech] = true,
 	[Setting.HandleCapitalization] = false,
 	[Setting.HandlePunctuation] = false,
+	[Setting.EnableUndo] = true
 };
 
 local configOrder = {
@@ -29,7 +31,8 @@ local configOrder = {
     Setting.HandleRPSyntax,
 	Setting.HandleNPCSpeech,
 	Setting.HandleCapitalization,
-	Setting.HandlePunctuation
+	Setting.HandlePunctuation,
+	Setting.EnableUndo
 };
 
 local settingText = {
@@ -56,6 +59,10 @@ local settingText = {
 	[Setting.HandlePunctuation] = {
 		Label = "Automatically add punctuation to the last message",
 		Hint = "Adds a period to the end of your last message if there's no punctuation present"
+	},
+	[Setting.EnableUndo] = {
+		Label = "Enable Undo with Ctrl+Z",
+		Hint = "If you accidentally delete your message, or close the chat box, press Ctrl+Z to undo"
 	}
 };
 

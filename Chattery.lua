@@ -6,6 +6,8 @@ local ADDON_COLOR = CreateColorFromHexString("ff5865F2");
 ------------
 
 local EDITBOX_DEFAULTS = {};
+local UNDO_BUFFER = {};
+local UNDO_HOOKED = {};
 
 ---@class Chattery
 Chattery = {};
@@ -31,6 +33,55 @@ function Chattery.SetEditBoxToDefaults(editBox)
     editBox:SetVisibleTextByteLimit(defaults.VisibleTextByteLimit);
 end
 
+local function ShouldHandleUndo()
+	return Chattery.Settings.GetSetting(Chattery.Setting.EnableUndo);
+end
+
+local function HookEditBoxUndo(editBox)
+    if UNDO_HOOKED[editBox] then
+		return;
+	end
+    UNDO_HOOKED[editBox] = true;
+
+    local prevText = "";
+
+    editBox:HookScript("OnTextChanged", function(self, userInput)
+        if not userInput or not ShouldHandleUndo() then
+			return;
+		end
+        local current = self:GetText();
+        if current == "" and prevText ~= "" then
+            UNDO_BUFFER[self] = prevText;
+        end
+        prevText = current;
+    end);
+
+    editBox:HookScript("OnKeyDown", function(self, key)
+		if not ShouldHandleUndo() then
+			return;
+		end
+        if key == "Z" and IsControlKeyDown() and self:GetText() == "" then
+            local buf = UNDO_BUFFER[self];
+            if buf then
+                self:SetText(buf);
+                self:SetCursorPosition(#buf);
+                UNDO_BUFFER[self] = nil;
+            end
+        end
+    end);
+
+	editBox:HookScript("OnEscapePressed", function(self)
+		if not ShouldHandleUndo() then
+			return;
+		end
+		local text = self:GetText();
+		if #text > 0 then
+			UNDO_BUFFER[self] = text;
+		end
+		prevText = "";
+	end);
+end
+
 ---@param editBox EditBox
 function Chattery.OnEditBoxFocusGained(_, editBox)
     if not Chattery.ShouldHandleEditBox() then
@@ -45,6 +96,8 @@ function Chattery.OnEditBoxFocusGained(_, editBox)
             VisibleTextByteLimit = editBox:GetVisibleTextByteLimit()
         };
     end
+
+	HookEditBoxUndo(editBox);
 
 	if ChatteryNotificationFrame:IsShown() then
 		editBox:Hide();

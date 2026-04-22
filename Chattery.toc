@@ -29,6 +29,18 @@
 
 Chattery.lua
 
+Localization/Strings.lua
+Localization/enUS.lua [AllowLoadTextLocale enUS]
+Localization/esES.lua [AllowLoadTextLocale esES, esMX]
+Localization/deDE.lua [AllowLoadTextLocale deDE]
+Localization/frFR.lua [AllowLoadTextLocale frFR]
+Localization/itIT.lua [AllowLoadTextLocale itIT]
+Localization/koKR.lua [AllowLoadTextLocale koKR]
+Localization/ptBR.lua [AllowLoadTextLocale ptBR]
+Localization/ruRU.lua [AllowLoadTextLocale ruRU]
+Localization/zhCN.lua [AllowLoadTextLocale zhCN]
+Localization/zhTW.lua [AllowLoadTextLocale zhTW]
+
 Core/Constants.lua
 Core/Utils.lua
 Core/Events.lua

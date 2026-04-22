@@ -10,7 +10,7 @@
 - Added hints to settings in the settings UI
 - Added toggles for auto-capitalization and punctuation (**disabled** by default)
 	- When enabled, Chattery will automatically capitalize the beginning of the first message, and add a period to the end of the last message.
-
+- Added translations for all of the languages supported by the WoW client
 
 ## Fixed
 - Fixed an issue sending certain types of chat messages while in a garrison.

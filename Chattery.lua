@@ -122,3 +122,7 @@ function Chattery.GetColoredAddonName()
     end
     return color:WrapTextInColorCode(addonName);
 end
+
+--@alpha@
+	Chattery.Debug = true;
+--@end-alpha@

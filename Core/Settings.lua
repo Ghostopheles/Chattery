@@ -1,5 +1,6 @@
 local Events = Chattery.Events;
 local Registry = Chattery.EventRegistry;
+local Strings = Chattery.Strings;
 
 ---@class ChatterySettings
 local ChatterySettings = {};
@@ -37,32 +38,32 @@ local configOrder = {
 
 local settingText = {
     [Setting.SplitMarker] = {
-		Label = "Split Marker",
-		Hint = "Marker used to indicate a message has been split"
+		Label = Strings.SETTING_SPLIT_MARKER_LABEL,
+		Hint = Strings.SETTING_SPLIT_MARKER_HINT
 	},
     [Setting.ShowMessageIndex] = {
-		Label = "Show Message Index",
-		Hint = "Prepend message index to each message"
+		Label = Strings.SETTING_SHOW_MESSAGE_INDEX_LABEL,
+		Hint = Strings.SETTING_SHOW_MESSAGE_INDEX_HINT
 	},
     [Setting.HandleRPSyntax] = {
-		Label = "Handle RP Syntax",
-		Hint = "Preserves text formatting and coloring for RP syntax"
+		Label = Strings.SETTING_HANDLE_RP_SYNTAX_LABEL,
+		Hint = Strings.SETTING_HANDLE_RP_SYNTAX_HINT
 	},
 	[Setting.HandleNPCSpeech] = {
-		Label = "Handle NPC Speech",
-		Hint = "Prepends the NPC speech token to the beginning of each message when speaking as an NPC"
+		Label = Strings.SETTING_HANDLE_NPC_SPEECH_LABEL,
+		Hint = Strings.SETTING_HANDLE_NPC_SPEECH_HINT
 	},
 	[Setting.HandleCapitalization] = {
-		Label = "Auto-capitalize the start of the first message",
-		Hint = "Capitalizes the beginning of your first message if it's not already capitalized"
+		Label = Strings.SETTING_HANDLE_CAPITALIZATION_LABEL,
+		Hint = Strings.SETTING_HANDLE_CAPITALIZATION_HINT
 	},
 	[Setting.HandlePunctuation] = {
-		Label = "Automatically add punctuation to the last message",
-		Hint = "Adds a period to the end of your last message if there's no punctuation present"
+		Label = Strings.SETTING_HANDLE_PUNCTUATION_LABEL,
+		Hint = Strings.SETTING_HANDLE_PUNCTUATION_HINT
 	},
 	[Setting.EnableUndo] = {
-		Label = "Enable Undo with Ctrl+Z",
-		Hint = "If you accidentally delete your message, or close the chat box, press Ctrl+Z to undo"
+		Label = Strings.SETTING_ENABLE_UNDO_LABEL,
+		Hint = Strings.SETTING_ENABLE_UNDO_HINT
 	}
 };
 

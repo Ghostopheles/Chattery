@@ -1,6 +1,7 @@
 local Events = Chattery.Events;
 local Registry = Chattery.EventRegistry;
 local Constants = Chattery.Constants;
+local Strings = Chattery.Strings;
 
 ------------
 
@@ -27,9 +28,9 @@ end
 local NOTIF_TYPE = Constants.NOTIFICATION_TYPE;
 
 local NOTIF_TYPE_TO_MESSAGE = {
-	[NOTIF_TYPE.HARDWARE_PROMPT] = "Press [Enter] to continue",
-	[NOTIF_TYPE.MESSAGE_THROTTLED] = "Message throttled",
-	[NOTIF_TYPE.WAITING_FOR_THROTTLE] = "Waiting...",
+	[NOTIF_TYPE.HARDWARE_PROMPT] = Strings.NOTIF_HW_PROMPT,
+	[NOTIF_TYPE.MESSAGE_THROTTLED] = Strings.NOTIF_MSG_THROTTLED,
+	[NOTIF_TYPE.WAITING_FOR_THROTTLE] = Strings.NOTIF_WAITING_FOR_THROTTLE,
 };
 
 local NOTIF_TYPE_TO_COLOR = {

@@ -143,7 +143,7 @@ function Chunker.ShouldHandleCapitalization()
 end
 
 function Chunker.ShouldHandlePunctuation()
-	return GetSetting(Chattery.Setting.HandleCapitalization);
+	return GetSetting(Chattery.Setting.HandlePunctuation);
 end
 
 function Chunker.SplitMessage(message, chunkSize, chatType)
@@ -245,6 +245,20 @@ function Chunker.SplitMessage(message, chunkSize, chatType)
     end
 
     flushRaw();
+
+    if Chunker.ShouldHandleCapitalization() and #rawChunks > 0 then
+        rawChunks[1] = rawChunks[1]:gsub("(%A*)(%l)", function(pre, letter)
+            return pre .. letter:upper();
+        end, 1);
+    end
+
+    if Chunker.ShouldHandlePunctuation() and #rawChunks > 0 then
+        local last = rawChunks[#rawChunks];
+        local lastChar = last:sub(-1);
+        if lastChar ~= "." and lastChar ~= "!" and lastChar ~= "?" then
+            rawChunks[#rawChunks] = last .. ".";
+        end
+    end
 
     local finalChunks = {};
     local numFinalChunks = #rawChunks;

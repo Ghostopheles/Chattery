@@ -299,13 +299,11 @@ function ChatManager.OnEditBoxParseText(_, editBox)
 
     HARDWARE_INPUT = true;
 
-	---@diagnostic disable-next-line: undefined-field
     local chatTarget = editBox:GetTellTarget() or editBox:GetChannelTarget();
     if chatTarget == 0 then
         chatTarget = nil;
     end
 
-	---@diagnostic disable-next-line: undefined-field
     local language = editBox.languageID;
 
     local chunks = Chunker.SplitMessage(message, chunkSize, chatType);
@@ -334,13 +332,39 @@ function ChatManager.OnSubstituteChatMessageBeforeSend()
     TEXT_BEFORE_PARSE = nil;
 end
 
+function ChatManager.OnPreSend(message, context)
+	local chatType = context.chatType;
+    local chunkSize = CHAT_TYPE_TO_CHUNK_SIZE[chatType];
+    if not ChatManager.ShouldHandleChat(chatType) or message:len() < chunkSize then
+        return;
+    end
+
+    HARDWARE_INPUT = true;
+
+    local target = context.target;
+    local language = context.language;
+
+    local chunks = Chunker.SplitMessage(message, chunkSize, chatType);
+
+	-- cancel out the hardware input flag since it'll be consumed before the queue starts queuing
+	if QueueHandler:DoesChatTypeRequireHardwareInput(chatType) then
+		HARDWARE_INPUT = false;
+	end
+
+    for i = 2, #chunks do -- skipping first index because of below
+        local chunk = chunks[i];
+        QueueHandler:QueueMessage(chunk, chatType, language, target);
+    end
+    QueueHandler:Start();
+
+    -- returning the first chunk so it gets sent by the ongoing 'message send' flow
+	return chunks[1];
+end
+
+local LibChatFilter = LibStub:GetLibrary("LibChatFilter");
+LibChatFilter.RegisterFinalizer(ChatManager.OnPreSend);
+
 ------------
-
-EventRegistry:RegisterCallback("ChatFrame.OnEditBoxPreSendText", ChatManager.OnEditBoxParseText);
-
-C_Timer.After(2, function()
-    hooksecurefunc(ChatFrameUtil, "SubstituteChatMessageBeforeSend", ChatManager.OnSubstituteChatMessageBeforeSend);
-end);
 
 Chattery.QueueHandler = QueueHandler;
 Chattery.ChatManager = ChatManager;

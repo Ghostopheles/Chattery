@@ -276,62 +276,6 @@ function ChatManager.ContinueFromPrompt()
 	QueueHandler:Resume();
 end
 
-local TARGET_EDIT_BOX, TEXT_BEFORE_PARSE;
-
----@param editBox EditBox
-function ChatManager.OnEditBoxParseText(_, editBox)
-    local message = editBox:GetText();
-    if not message or message == "" then
-        return;
-    end
-
-    local chatType = ChatFrameUtil.GetActiveChatType();
-    chatType = chatType and chatType:upper() or "SAY";
-
-    local chunkSize = CHAT_TYPE_TO_CHUNK_SIZE[chatType];
-    if not ChatManager.ShouldHandleChat(chatType) or message:len() < chunkSize then
-        return;
-    end
-
-    -- it's chattery'ing time
-    TARGET_EDIT_BOX = editBox;
-    TEXT_BEFORE_PARSE = message;
-
-    HARDWARE_INPUT = true;
-
-    local chatTarget = editBox:GetTellTarget() or editBox:GetChannelTarget();
-    if chatTarget == 0 then
-        chatTarget = nil;
-    end
-
-    local language = editBox.languageID;
-
-    local chunks = Chunker.SplitMessage(message, chunkSize, chatType);
-    -- can just send the first chunk immediately by changing the editBox text
-    editBox:SetText(chunks[1]);
-
-	-- cancel out the hardware input flag since it'll be consumed before the queue starts queuing
-	if QueueHandler:DoesChatTypeRequireHardwareInput(chatType) then
-		HARDWARE_INPUT = false;
-	end
-
-    for i = 2, #chunks do -- skipping first index because of above
-        local chunk = chunks[i];
-        QueueHandler:QueueMessage(chunk, chatType, language, chatTarget);
-    end
-    QueueHandler:Start();
-end
-
-function ChatManager.OnSubstituteChatMessageBeforeSend()
-    if not (TARGET_EDIT_BOX and TEXT_BEFORE_PARSE) then
-        return;
-    end
-
-    TARGET_EDIT_BOX:SetText(TEXT_BEFORE_PARSE);
-    TARGET_EDIT_BOX = nil;
-    TEXT_BEFORE_PARSE = nil;
-end
-
 function ChatManager.OnPreSend(message, context)
 	local chatType = context.chatType;
     local chunkSize = CHAT_TYPE_TO_CHUNK_SIZE[chatType];

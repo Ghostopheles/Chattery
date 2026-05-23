@@ -306,7 +306,7 @@ function ChatManager.OnPreSend(message, context)
 end
 
 local LibChatFilter = LibStub:GetLibrary("LibChatFilter");
-LibChatFilter.RegisterFinalizer(ChatManager.OnPreSend);
+LibChatFilter.RegisterMutator(ChatManager.OnPreSend, LibChatFilter.Stage.EXCLUSIVE_FINALIZE, LibChatFilter.Track.SEND);
 
 ------------
 

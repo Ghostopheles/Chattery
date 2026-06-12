@@ -15,6 +15,10 @@ ignore:
   - CHANGELOG.md
   - README.md
 
+externals:
+  Libs/LibStub: https://repos.wowace.com/wow/libstub/trunk
+  Libs/LibChatFilter: https://github.com/Ghostopheles/LibChatFilter
+
 manual-changelog:
   filename: CHANGELOG.md
   markup-type: markdown

@@ -27,6 +27,9 @@
 ## X-Curse-Project-ID: 1443835
 ## X-Wago-ID: 4N2kbW6L
 
+Libs/LibStub/LibStub.lua
+Libs/LibChatFilter/lib.xml
+
 Chattery.lua
 
 Localization/Strings.lua

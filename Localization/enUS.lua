@@ -13,7 +13,7 @@ local L = {
 	SETTING_HANDLE_NPC_SPEECH_LABEL = "Enable NPC Speech Prefix",
 	SETTING_HANDLE_NPC_SPEECH_HINT = "Adds the NPC speech token to messages when speaking as an NPC",
 
-	SETTING_HANDLE_CAPITALIZATION_LABEL = "Auto-capitalization",
+	SETTING_HANDLE_CAPITALIZATION_LABEL = "Auto Capitalization",
 	SETTING_HANDLE_CAPITALIZATION_HINT = "Capitalizes the first message if needed",
 
 	SETTING_HANDLE_PUNCTUATION_LABEL = "Auto Punctuation",

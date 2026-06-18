@@ -279,7 +279,7 @@ end
 function ChatManager.OnPreSend(message, context)
 	local chatType = context.chatType;
     local chunkSize = CHAT_TYPE_TO_CHUNK_SIZE[chatType];
-    if not ChatManager.ShouldHandleChat(chatType) or message:len() < chunkSize then
+    if not ChatManager.ShouldHandleChat(chatType) then
         return;
     end
 
@@ -289,6 +289,9 @@ function ChatManager.OnPreSend(message, context)
     local language = context.language;
 
     local chunks = Chunker.SplitMessage(message, chunkSize, chatType);
+	if #chunks == 1 then
+		return chunks[1];
+	end
 
 	-- cancel out the hardware input flag since it'll be consumed before the queue starts queuing
 	if QueueHandler:DoesChatTypeRequireHardwareInput(chatType) then

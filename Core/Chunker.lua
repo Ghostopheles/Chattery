@@ -157,7 +157,7 @@ function Chunker.SplitMessage(message, chunkSize, chatType)
     local current = "";
 
     local splitMarker = Chunker.GetMessageSplitMarker();
-    local handleRPSyntax = Chunker.ShouldHandleRPSyntax();
+    local handleRPSyntax = Chunker.ShouldHandleRPSyntax() and #message > chunkSize;
 
     local npcPrefix = "";
     if Chunker.ShouldHandleNPCSpeech(chatType) and (message:sub(1, #NPC_SPEECH_TOKEN) == NPC_SPEECH_TOKEN) then

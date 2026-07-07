@@ -6,4 +6,5 @@
 - Auto grammar settings now apply to messages shorter than 255 characters long
 
 ## Fixed
-- Fixed an issue that caused long messages with no spaces to throw errors and fail to send
+- Long messages with no spaces would throw errors and fail to send
+- Messages ending up over the max message length and failing to send

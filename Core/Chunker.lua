@@ -185,12 +185,16 @@ function Chunker.SplitMessage(message, chunkSize, chatType)
     local rpDelimStack = {};
     local rpReopenStack = nil;
 
-    local function currentCloserSize()
-        local size = 0;
-        for _, delim in ipairs(rpDelimStack) do
-            size = size + #delim.close;
+    local function overflows(text, addedLength)
+        local closerSize = 0;
+        if handleRPSyntax then
+            local stack = CopyTable(rpDelimStack);
+            UpdateDelimStack(text, stack);
+            for _, delim in ipairs(stack) do
+                closerSize = closerSize + #delim.close;
+            end
         end
-        return size;
+        return #current + (addedLength or #text) + closerSize > usableLength();
     end
 
     local function flushRaw()
@@ -210,57 +214,53 @@ function Chunker.SplitMessage(message, chunkSize, chatType)
         current = "";
     end
 
+    local function newChunk()
+        flushRaw();
+        if rpReopenStack then
+            current = PrependOpeners("", rpReopenStack);
+            rpReopenStack = nil;
+        end
+    end
+
+    local function append(text)
+        current = current .. text;
+        if handleRPSyntax then
+            UpdateDelimStack(text, rpDelimStack);
+        end
+    end
+
     local tokens = Tokenizer:Tokenize(message);
     for _, token in ipairs(tokens) do
-        local text = token.Value;
         if token.Type == Tokenizer.TOKEN_TYPE.Link then
-            local _, _, displayText = LinkUtil.ExtractLink(text);
-            local visibleLength = #displayText;
+            local _, _, displayText = LinkUtil.ExtractLink(token.Value);
 
-            if #current + visibleLength + (handleRPSyntax and currentCloserSize() or 0) > usableLength() then
-                flushRaw();
+            if overflows("", #displayText) then
+                newChunk();
             end
 
-            current = current .. text;
+            current = current .. token.Value;
         else
-            local parts = Chunker.SplitMessageByWords(token.Value);
-            for _, part in ipairs(parts) do
-                local partLength = #part;
-
-                if #current + partLength + (handleRPSyntax and currentCloserSize() or 0) > usableLength() then
-                    flushRaw();
-                    if rpReopenStack then
-                        current = PrependOpeners("", rpReopenStack);
-                        rpReopenStack = nil;
-                    end
+            for _, part in ipairs(Chunker.SplitMessageByWords(token.Value)) do
+                if overflows(part) then
+                    newChunk();
                 end
 
-                while #current + #part + (handleRPSyntax and currentCloserSize() or 0) > usableLength() do
-                    local available = usableLength() - #current - (handleRPSyntax and currentCloserSize() or 0);
-                    if available <= 0 then
+                -- Word longer than a whole chunk: hard-split at the byte limit.
+                while overflows(part) do
+                    local piece = part:sub(1, math.max(usableLength() - #current, 0));
+                    while #piece > 1 and overflows(piece) do
+                        piece = piece:sub(1, #piece - 1);
+                    end
+                    if #piece == 0 then
                         break;
                     end
 
-                    local piece = part:sub(1, available);
-                    current = current .. piece;
-                    if handleRPSyntax then
-                        UpdateDelimStack(piece, rpDelimStack);
-                    end
-
-                    flushRaw();
-                    if rpReopenStack then
-                        current = PrependOpeners("", rpReopenStack);
-                        rpReopenStack = nil;
-                    end
-
-                    part = part:sub(available + 1);
+                    append(piece);
+                    newChunk();
+                    part = part:sub(#piece + 1);
                 end
 
-                current = current .. part;
-
-                if handleRPSyntax then
-                    UpdateDelimStack(part, rpDelimStack);
-                end
+                append(part);
             end
         end
     end

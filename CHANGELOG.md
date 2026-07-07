@@ -4,6 +4,7 @@
 
 ## Added
 - Auto grammar settings now apply to messages shorter than 255 characters long
+	- This excludes the RP formatting setting
 
 ## Fixed
 - Long messages with no spaces would throw errors and fail to send

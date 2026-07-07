@@ -1,4 +1,4 @@
-## Interface: 120007
+## Interface: 120007, 120100
 ## Title: |cff5865F2Chattery|r
 ## Notes: A collection of cadaverous chat enhancements for roleplayers
 ## Author: Ghostopheles

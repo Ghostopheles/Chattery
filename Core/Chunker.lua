@@ -235,6 +235,27 @@ function Chunker.SplitMessage(message, chunkSize, chatType)
                     end
                 end
 
+                while #current + #part + (handleRPSyntax and currentCloserSize() or 0) > usableLength() do
+                    local available = usableLength() - #current - (handleRPSyntax and currentCloserSize() or 0);
+                    if available <= 0 then
+                        break;
+                    end
+
+                    local piece = part:sub(1, available);
+                    current = current .. piece;
+                    if handleRPSyntax then
+                        UpdateDelimStack(piece, rpDelimStack);
+                    end
+
+                    flushRaw();
+                    if rpReopenStack then
+                        current = PrependOpeners("", rpReopenStack);
+                        rpReopenStack = nil;
+                    end
+
+                    part = part:sub(available + 1);
+                end
+
                 current = current .. part;
 
                 if handleRPSyntax then

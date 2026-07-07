@@ -202,7 +202,7 @@ local SELF_CONFIRMING_EVENTS = {
 };
 
 function QueueHandler:OnChatMessageReceived(event, playerName)
-	if #self.MessageQueue < 1 or not self.Waiting then
+	if not self.Waiting then
 		return;
 	end
 

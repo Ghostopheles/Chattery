@@ -16,6 +16,16 @@ function Chattery.Init()
 	EventRegistry:RegisterCallback("ChatFrame.OnEditBoxFocusGained", Chattery.OnEditBoxFocusGained);
 
 	Utils = Chattery.Utils;
+
+	local function OnMessageSent()
+		if Chattery.QueueHandler.Running then
+			return;
+		end
+		local editBox = ChatFrameUtil.GetLastActiveWindow();
+		editBox.disableActivate = false;
+	end
+
+	Chattery.EventRegistry:RegisterCallback(Chattery.Events.MESSAGE_SENT, OnMessageSent);
 end
 
 function Chattery.ShouldHandleEditBox()
@@ -89,6 +99,12 @@ function Chattery.OnEditBoxFocusGained(_, editBox)
         return;
     end
 
+	if ChatteryNotificationFrame:IsShown() then
+		editBox.disableActivate = true;
+		editBox:Hide();
+		return;
+	end
+
 	if not EDITBOX_DEFAULTS[editBox] then
         EDITBOX_DEFAULTS[editBox] = {
             MaxLetters = editBox:GetMaxLetters(),
@@ -98,11 +114,6 @@ function Chattery.OnEditBoxFocusGained(_, editBox)
     end
 
 	HookEditBoxUndo(editBox);
-
-	if ChatteryNotificationFrame:IsShown() then
-		editBox:Hide();
-		return;
-	end
 
     editBox:SetMaxLetters(0);
     editBox:SetMaxBytes(0);

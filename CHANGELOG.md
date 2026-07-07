@@ -7,5 +7,6 @@
 	- This excludes the RP formatting setting
 
 ## Fixed
-- Long messages with no spaces would throw errors and fail to send
-- Messages ending up over the max message length and failing to send
+- Fixed an issue that caused long messages with no spaces would throw errors and fail to send
+- Fixed an issue where messages could end up over the max message length and fail to send
+- Fixed an overflow error that would be thrown if you tried to open the chat box while messages were sending

@@ -20,9 +20,14 @@ local L = {
 	SETTING_ENABLE_UNDO_LABEL = "Включить отмену с Ctrl+Z",
 	SETTING_ENABLE_UNDO_HINT = "Нажмите Ctrl+Z, чтобы восстановить удалённое или закрытое сообщение",
 
+	SETTING_SHOW_MINIMAP_BUTTON_LABEL = "Показывать кнопку у миникарты",
+	SETTING_SHOW_MINIMAP_BUTTON_HINT = "Показывает кнопку Chattery у миникарты",
+
 	NOTIF_HW_PROMPT = "Нажмите [Enter], чтобы продолжить",
 	NOTIF_MSG_THROTTLED = "Сообщение ограничено",
 	NOTIF_WAITING_FOR_THROTTLE = "Ожидание...",
+
+	MINIMAP_BUTTON_TOOLTIP_HELP_TEXT = "ЛКМ: Открыть/закрыть окно настроек\nShift+ЛКМ: Скрыть эту кнопку"
 };
 
 ------------

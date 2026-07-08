@@ -20,9 +20,14 @@ local L = {
 	SETTING_ENABLE_UNDO_LABEL = "启用Ctrl+Z撤销",
 	SETTING_ENABLE_UNDO_HINT = "按Ctrl+Z恢复已删除或已关闭的消息",
 
+	SETTING_SHOW_MINIMAP_BUTTON_LABEL = "显示小地图按钮",
+	SETTING_SHOW_MINIMAP_BUTTON_HINT = "显示Chattery小地图按钮",
+
 	NOTIF_HW_PROMPT = "按 [Enter] 继续",
 	NOTIF_MSG_THROTTLED = "消息已限流",
 	NOTIF_WAITING_FOR_THROTTLE = "等待中...",
+
+	MINIMAP_BUTTON_TOOLTIP_HELP_TEXT = "左键点击：切换设置窗口\nShift+点击：隐藏此按钮"
 };
 
 ------------

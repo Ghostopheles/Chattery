@@ -20,9 +20,14 @@ local L = {
 	SETTING_ENABLE_UNDO_LABEL = "Ctrl+Z로 실행 취소 활성화",
 	SETTING_ENABLE_UNDO_HINT = "Ctrl+Z를 눌러 삭제되거나 닫힌 메시지를 복원합니다",
 
+	SETTING_SHOW_MINIMAP_BUTTON_LABEL = "미니맵 버튼 표시",
+	SETTING_SHOW_MINIMAP_BUTTON_HINT = "미니맵에 Chattery 버튼을 표시합니다",
+
 	NOTIF_HW_PROMPT = "[Enter] 키를 눌러 계속",
 	NOTIF_MSG_THROTTLED = "메시지 제한됨",
 	NOTIF_WAITING_FOR_THROTTLE = "대기 중...",
+
+	MINIMAP_BUTTON_TOOLTIP_HELP_TEXT = "좌클릭: 설정 창 열기/닫기\nShift+클릭: 이 버튼 숨기기"
 };
 
 ------------

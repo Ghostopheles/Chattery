@@ -20,9 +20,14 @@ local L = {
 	SETTING_ENABLE_UNDO_LABEL = "Rückgängig mit Strg+Z aktivieren",
 	SETTING_ENABLE_UNDO_HINT = "Drücke Strg+Z, um eine gelöschte oder geschlossene Nachricht wiederherzustellen",
 
+	SETTING_SHOW_MINIMAP_BUTTON_LABEL = "Minimap-Button anzeigen",
+	SETTING_SHOW_MINIMAP_BUTTON_HINT = "Zeigt den Chattery-Minimap-Button an",
+
 	NOTIF_HW_PROMPT = "Drücke [Enter], um fortzufahren",
 	NOTIF_MSG_THROTTLED = "Nachricht gedrosselt",
 	NOTIF_WAITING_FOR_THROTTLE = "Warten...",
+
+	MINIMAP_BUTTON_TOOLTIP_HELP_TEXT = "Linksklick: Einstellungsfenster umschalten\nUmschalt-Klick: Diesen Button ausblenden"
 };
 
 ------------

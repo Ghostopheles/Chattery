@@ -20,9 +20,14 @@ local L = {
 	SETTING_ENABLE_UNDO_LABEL = "Activar deshacer con Ctrl+Z",
 	SETTING_ENABLE_UNDO_HINT = "Pulsa Ctrl+Z para restaurar un mensaje eliminado o cerrado",
 
+	SETTING_SHOW_MINIMAP_BUTTON_LABEL = "Mostrar botón del minimapa",
+	SETTING_SHOW_MINIMAP_BUTTON_HINT = "Muestra el botón de Chattery en el minimapa",
+
 	NOTIF_HW_PROMPT = "Pulsa [Enter] para continuar",
 	NOTIF_MSG_THROTTLED = "Mensaje limitado",
 	NOTIF_WAITING_FOR_THROTTLE = "Esperando...",
+
+	MINIMAP_BUTTON_TOOLTIP_HELP_TEXT = "Clic izquierdo: Abrir/cerrar los ajustes\nMayús+clic: Ocultar este botón"
 };
 
 ------------

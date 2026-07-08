@@ -22,9 +22,14 @@ local L = {
 	SETTING_ENABLE_UNDO_LABEL = "Enable Undo with Ctrl+Z",
 	SETTING_ENABLE_UNDO_HINT = "Press Ctrl+Z to restore a deleted or closed message",
 
+	SETTING_SHOW_MINIMAP_BUTTON_LABEL = "Show minimap Button",
+	SETTING_SHOW_MINIMAP_BUTTON_HINT = "Show the Chattery minimap button",
+
 	NOTIF_HW_PROMPT = "Press [Enter] to continue",
 	NOTIF_MSG_THROTTLED = "Message throttled",
 	NOTIF_WAITING_FOR_THROTTLE = "Waiting...",
+
+	MINIMAP_BUTTON_TOOLTIP_HELP_TEXT = "Left-click: Toggle settings frame\nShift-click: Hide this button"
 };
 
 ------------

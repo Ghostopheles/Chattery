@@ -20,9 +20,14 @@ local L = {
 	SETTING_ENABLE_UNDO_LABEL = "Activer l'annulation avec Ctrl+Z",
 	SETTING_ENABLE_UNDO_HINT = "Appuyez sur Ctrl+Z pour restaurer un message supprimé ou fermé",
 
+	SETTING_SHOW_MINIMAP_BUTTON_LABEL = "Afficher le bouton de la minicarte",
+	SETTING_SHOW_MINIMAP_BUTTON_HINT = "Affiche le bouton Chattery sur la minicarte",
+
 	NOTIF_HW_PROMPT = "Appuyez sur [Entrée] pour continuer",
 	NOTIF_MSG_THROTTLED = "Message limité",
 	NOTIF_WAITING_FOR_THROTTLE = "En attente...",
+
+	MINIMAP_BUTTON_TOOLTIP_HELP_TEXT = "Clic gauche : Ouvrir/fermer les paramètres\nMaj+clic : Masquer ce bouton"
 };
 
 ------------

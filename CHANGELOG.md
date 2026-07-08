@@ -1,6 +1,11 @@
-# 0.8.2
+# 0.8.3
 
-**Reminder**: You can access the Chattery settings either through the Addon Compartment on the minimap, or by using the `/chattery` command.
+**Reminder**: You can access the Chattery settings through the minimap button, the addon compartment, or by using the `/chattery` command.
+
+## Added
+- A shiny new minimap button. Can be toggled off in the settings, or with a right-click
+
+# 0.8.2
 
 ## Added
 - Auto grammar settings now apply to messages shorter than 255 characters long

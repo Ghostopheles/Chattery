@@ -13,7 +13,8 @@ local Setting = {
 	HandleNPCSpeech = "HandleNPCSpeech",
 	HandleCapitalization = "HandleCapitalization",
 	HandlePunctuation = "HandlePunctuation",
-	EnableUndo = "EnableUndo"
+	EnableUndo = "EnableUndo",
+	ShowMinimapButton = "ShowMinimapButton"
 };
 
 local defaultConfig = {
@@ -23,7 +24,8 @@ local defaultConfig = {
 	[Setting.HandleNPCSpeech] = true,
 	[Setting.HandleCapitalization] = false,
 	[Setting.HandlePunctuation] = false,
-	[Setting.EnableUndo] = true
+	[Setting.EnableUndo] = true,
+	[Setting.ShowMinimapButton] = true,
 };
 
 local configOrder = {
@@ -33,7 +35,8 @@ local configOrder = {
 	Setting.HandleNPCSpeech,
 	Setting.HandleCapitalization,
 	Setting.HandlePunctuation,
-	Setting.EnableUndo
+	Setting.EnableUndo,
+	Setting.ShowMinimapButton
 };
 
 local settingText = {
@@ -64,6 +67,10 @@ local settingText = {
 	[Setting.EnableUndo] = {
 		Label = Strings.SETTING_ENABLE_UNDO_LABEL,
 		Hint = Strings.SETTING_ENABLE_UNDO_HINT
+	},
+	[Setting.ShowMinimapButton] = {
+		Label = Strings.SETTING_SHOW_MINIMAP_BUTTON_LABEL,
+		Hint = Strings.SETTING_SHOW_MINIMAP_BUTTON_HINT
 	}
 };
 

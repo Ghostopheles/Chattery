@@ -29,6 +29,8 @@
 
 Libs/LibStub/LibStub.lua
 Libs/LibChatFilter/lib.xml
+Libs/LibDataBroker-1.1/LibDataBroker-1.1.lua
+Libs/LibDBIcon-1.0/LibDBIcon-1.0/lib.xml
 
 Chattery.lua
 
@@ -48,6 +50,7 @@ Core/Constants.lua
 Core/Utils.lua
 Core/Events.lua
 Core/Settings.lua
+Core/MinimapButton.lua
 Core/Notifications.lua
 Core/Tokenizer.lua
 Core/Chunker.lua

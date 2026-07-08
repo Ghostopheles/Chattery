@@ -18,6 +18,8 @@ ignore:
 externals:
   Libs/LibStub: https://repos.wowace.com/wow/libstub/trunk
   Libs/LibChatFilter: https://github.com/Ghostopheles/LibChatFilter
+  Libs/LibDBIcon-1.0: https://repos.wowace.com/wow/libdbicon-1-0/trunk
+  Libs/LibDataBroker-1.1: https://github.com/tekkub/libdatabroker-1-1
 
 manual-changelog:
   filename: CHANGELOG.md

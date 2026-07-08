@@ -7,7 +7,7 @@
 
 		<Layers>
 			<Layer level="ARTWORK">
-				<Texture parentKey="Icon" atlas="common-icon-undo" setAllPoints="true" rotation="0.2"/>
+				<Texture parentKey="Icon" atlas="common-icon-undo" setAllPoints="true" rotation="-30"/>
 			</Layer>
 			<Layer level="BACKGROUND">
 				<Texture parentKey="Glow" atlas="house-upgrade-bg-radial-glow-center" alpha="1.0" hidden="true">
@@ -25,14 +25,14 @@
 					<Origin point="CENTER"/>
 				</Rotation>
 			</AnimationGroup>
-			<AnimationGroup parentKey="MouseoverAnim" looping="BOUNCE">
-				<Scale childKey="Icon" duration="0.75" fromScaleX="1.0" toScaleX="1.1" fromScaleY="1.0" toScaleY="1.1" />
-				<Rotation childKey="Icon" duration="0.75" degrees="0">
+			<AnimationGroup parentKey="MouseoverAnim" looping="NONE">
+				<Scale parentKey="Scale" childKey="Icon" duration="0.25" fromScaleX="1.0" toScaleX="1.1" fromScaleY="1.0" toScaleY="1.1" smoothing="IN_OUT" />
+				<Rotation parentKey="Rotation" childKey="Icon" duration="0.25" degrees="30" smoothing="IN_OUT">
 					<Origin point="CENTER"/>
 				</Rotation>
 			</AnimationGroup>
-			<AnimationGroup parentKey="ClickAnim" looping="BOUNCE">
-				<Scale childKey="Icon" duration="0.5" fromScaleX="1.1" toScaleX="0.9" fromScaleY="1.1" toScaleY="0.9" smoothing="IN_OUT"/>
+			<AnimationGroup parentKey="ClickAnim" looping="NONE">
+				<Scale childKey="Icon" duration="0.1" fromScaleX="1.1" toScaleX="0.9" fromScaleY="1.1" toScaleY="0.9" smoothing="IN_OUT"/>
 			</AnimationGroup>
 		</Animations>
 

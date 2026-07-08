@@ -4,6 +4,8 @@ function ChatterySettingResetButtonMixin:OnEnter()
 	self.Glow:Show();
 	self.GlowAnim:Play();
 	self.MouseoverAnim:Play();
+	self.MouseoverAnim.Scale:SetEndDelay(20);
+	self.MouseoverAnim.Rotation:SetEndDelay(20);
 
 	GameTooltip:SetOwner(self, "ANCHOR_TOP");
 	GameTooltip:AddLine(RESET_TO_DEFAULT);
@@ -13,7 +15,10 @@ end
 function ChatterySettingResetButtonMixin:OnLeave()
 	self.Glow:Hide();
 	self.GlowAnim:Stop();
-	self.MouseoverAnim:Stop();
+	self.MouseoverAnim.Scale:SetEndDelay(0);
+	self.MouseoverAnim.Rotation:SetEndDelay(0);
+	self.MouseoverAnim:Restart(true);
+
 	GameTooltip:Hide();
 end
 

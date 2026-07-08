@@ -2,12 +2,64 @@
     xsi:schemaLocation="http://www.blizzard.com/wow/ui/ https://raw.githubusercontent.com/Meorawr/wow-ui-schema/main/UI.xsd">
     <Include file="SettingControl.lua" />
 
+	<Button name="ChatterySettingResetButtonTemplate" mixin="ChatterySettingResetButtonMixin" virtual="true">
+		<Size x="20" y="20"/>
+
+		<Layers>
+			<Layer level="ARTWORK">
+				<Texture parentKey="Icon" atlas="common-icon-undo" setAllPoints="true" rotation="0.2"/>
+			</Layer>
+			<Layer level="BACKGROUND">
+				<Texture parentKey="Glow" atlas="house-upgrade-bg-radial-glow-center" alpha="1.0" hidden="true">
+					<Size x="60" y="60"/>
+					<Anchors>
+						<Anchor point="CENTER"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+		</Layers>
+
+		<Animations>
+			<AnimationGroup parentKey="GlowAnim" looping="REPEAT" setToFinalAlpha="true">
+				<Rotation childKey="Glow" duration="6" order="1" degrees="0">
+					<Origin point="CENTER"/>
+				</Rotation>
+			</AnimationGroup>
+			<AnimationGroup parentKey="MouseoverAnim" looping="BOUNCE">
+				<Scale childKey="Icon" duration="0.75" fromScaleX="1.0" toScaleX="1.1" fromScaleY="1.0" toScaleY="1.1" />
+				<Rotation childKey="Icon" duration="0.75" degrees="0">
+					<Origin point="CENTER"/>
+				</Rotation>
+			</AnimationGroup>
+			<AnimationGroup parentKey="ClickAnim" looping="BOUNCE">
+				<Scale childKey="Icon" duration="0.5" fromScaleX="1.1" toScaleX="0.9" fromScaleY="1.1" toScaleY="0.9" smoothing="IN_OUT"/>
+			</AnimationGroup>
+		</Animations>
+
+		<Scripts>
+			<OnEnter method="OnEnter"/>
+			<OnLeave method="OnLeave"/>
+			<OnMouseDown method="OnMouseDown"/>
+			<OnMouseUp method="OnMouseUp"/>
+			<OnClick method="OnClick"/>
+		</Scripts>
+	</Button>
+
     <Frame name="ChatterySettingContainerTemplate" mixin="ChatterySettingContainerMixin" virtual="true">
         <Animations>
             <AnimationGroup parentKey="Anim" inherits="ChatterySlideInAnimTemplate"/>
         </Animations>
 
+		<Frames>
+			<Button parentKey="ResetButton" inherits="ChatterySettingResetButtonTemplate">
+				<Anchors>
+					<Anchor point="RIGHT" x="16"/>
+				</Anchors>
+			</Button>
+		</Frames>
+
         <Scripts>
+			<OnLoad method="OnLoad"/>
             <OnShow method="OnShow"/>
             <OnHide method="OnHide"/>
         </Scripts>
@@ -15,6 +67,7 @@
 
     <Frame name="ChatterySettingControlTemplate" mixin="ChatterySettingControlMixin" virtual="true">
         <Scripts>
+			<OnLoad method="OnLoad"/>
             <OnShow method="OnShow"/>
             <OnHide method="OnHide"/>
         </Scripts>

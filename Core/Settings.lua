@@ -108,6 +108,10 @@ function ChatterySettings.GetAllSettings()
     return settings;
 end
 
+function ChatterySettings.GetSettingDefault(setting)
+	return defaultConfig[setting];
+end
+
 ------------
 
 Chattery.Setting = Setting;

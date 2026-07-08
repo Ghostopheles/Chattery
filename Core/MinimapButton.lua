@@ -55,13 +55,16 @@ if not ChatteryConfig.Minimap then
 	};
 end
 
-local button = LibStub("LibDBIcon-1.0");
-button:Register(addonName, LDB, ChatteryConfig.Minimap);
+local LibDBIcon = LibStub("LibDBIcon-1.0");
+LibDBIcon:Register(addonName, LDB, ChatteryConfig.Minimap);
+
+local button = LibDBIcon:GetMinimapButton(addonName);
+button.icon:SetDesaturated(true);
 
 local function OnSettingChanged(_, variable, value)
     if variable == Setting.ShowMinimapButton then
         ChatteryConfig.Minimap.hide = not value;
-        button:Refresh(addonName, ChatteryConfig.Minimap);
+        LibDBIcon:Refresh(addonName, ChatteryConfig.Minimap);
     end
 end
 

@@ -147,8 +147,7 @@ function QueueHandler:UpdateBandwidth()
 end
 
 function QueueHandler:DoesChatTypeRequireHardwareInput(chatType)
-    return (Utils.IsInOpenWorld() or C_Garrison.IsOnGarrisonMap())
-		and HARDWARE_RESTRICTED_CHAT_TYPES[chatType];
+    return Utils.IsInPrecariousSituation() and HARDWARE_RESTRICTED_CHAT_TYPES[chatType];
 end
 
 function QueueHandler:TrySendMessage(entry)

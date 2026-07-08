@@ -10,3 +10,4 @@
 - Fixed an issue that caused long messages with no spaces would throw errors and fail to send
 - Fixed an issue where messages could end up over the max message length and fail to send
 - Fixed an overflow error that would be thrown if you tried to open the chat box while messages were sending
+- Fixed a catastrophic explosion that could occur when sending multi-part messages while in a delve

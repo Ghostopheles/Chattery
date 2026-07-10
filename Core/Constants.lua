@@ -24,7 +24,7 @@ ChatteryConstants.CHAT_TYPE_TO_CHUNK_SIZE = {
     BN_WHISPER = ChatteryConstants.CHUNK_SIZES.Extended
 };
 
----@enum ChatteryUnsupportedChatTypes
+---@class ChatteryUnsupportedChatTypes
 ChatteryConstants.UNSUPPORTED_CHAT_TYPES = {
     CHANNEL = true,
     VOICE_TEXT = true,
@@ -42,7 +42,7 @@ ChatteryConstants.NPC_CHAT_TYPES = {
 	EMOTE = 1
 };
 
----@enum ChatteryEditBoxLimits
+---@class ChatteryEditBoxLimits
 ChatteryConstants.EDIT_BOX_LIMITS = {
 	NONE = {
 		MaxLetters = 0,

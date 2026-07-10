@@ -1,5 +1,4 @@
 local addonName = ...;
-local Utils;
 
 local ADDON_COLOR = CreateColorFromHexString("ff5865F2");
 
@@ -13,7 +12,7 @@ local UNDO_HOOKED = {};
 Chattery = {};
 
 function Chattery.ShouldHandleEditBox()
-    return not InCombatLockdown() and not Utils.IsInChatLockdown();
+    return not InCombatLockdown() and not Chattery.Utils.IsInChatLockdown();
 end
 
 local function ShouldHandleUndo()
@@ -123,8 +122,6 @@ end
 
 function Chattery.Init()
 	EventRegistry:RegisterCallback("ChatFrame.OnEditBoxFocusGained", Chattery.OnEditBoxFocusGained);
-
-	Utils = Chattery.Utils;
 
 	local function OnMessageSent()
 		if Chattery.QueueHandler.Running then

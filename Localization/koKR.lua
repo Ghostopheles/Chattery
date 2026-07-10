@@ -23,6 +23,9 @@ local L = {
 	SETTING_SHOW_MINIMAP_BUTTON_LABEL = "미니맵 버튼 표시",
 	SETTING_SHOW_MINIMAP_BUTTON_HINT = "미니맵에 Chattery 버튼을 표시합니다",
 
+	SETTING_SHOW_CHARACTER_COUNT_LABEL = "메시지 글자 수 표시",
+	SETTING_SHOW_CHARACTER_COUNT_HINT = "채팅 입력창에 현재 및 최대 메시지 길이를 표시합니다",
+
 	NOTIF_HW_PROMPT = "[Enter] 키를 눌러 계속",
 	NOTIF_MSG_THROTTLED = "메시지 제한됨",
 	NOTIF_WAITING_FOR_THROTTLE = "대기 중...",

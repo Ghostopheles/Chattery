@@ -20,7 +20,7 @@
 	</Frame>
 
     <Frame name="ChatterySettingsFrame" parent="UIParent" mixin="ChatterySettingsFrameMixin" inherits="PortraitFrameFlatTemplate" movable="true" hidden="true">
-        <Size x="400" y="355"/>
+        <Size x="400" y="380"/>
         <Anchors>
             <Anchor point="CENTER"/>
         </Anchors>

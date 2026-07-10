@@ -23,6 +23,9 @@ local L = {
 	SETTING_SHOW_MINIMAP_BUTTON_LABEL = "Afficher le bouton de la minicarte",
 	SETTING_SHOW_MINIMAP_BUTTON_HINT = "Affiche le bouton Chattery sur la minicarte",
 
+	SETTING_SHOW_CHARACTER_COUNT_LABEL = "Afficher le nombre de caractères du message",
+	SETTING_SHOW_CHARACTER_COUNT_HINT = "Affiche la longueur actuelle et maximale du message dans la zone de discussion",
+
 	NOTIF_HW_PROMPT = "Appuyez sur [Entrée] pour continuer",
 	NOTIF_MSG_THROTTLED = "Message limité",
 	NOTIF_WAITING_FOR_THROTTLE = "En attente...",

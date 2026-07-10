@@ -42,6 +42,37 @@ ChatteryConstants.NPC_CHAT_TYPES = {
 	EMOTE = 1
 };
 
+---@enum ChatteryEditBoxLimits
+ChatteryConstants.EDIT_BOX_LIMITS = {
+	NONE = {
+		MaxLetters = 0,
+		MaxBytes = 0,
+		MaxVisibleTextByteLimit = 0
+	},
+	DEFAULT = {
+		MaxLetters = 255,
+		MaxBytes = 1280,
+		MaxVisibleTextByteLimit = 255
+	},
+};
+
+---@enum ChatteryChatTypeToEditBoxLimits
+ChatteryConstants.CHAT_TYPE_TO_EDIT_BOX_LIMITS = {
+    SAY = ChatteryConstants.EDIT_BOX_LIMITS.NONE,
+    EMOTE = ChatteryConstants.EDIT_BOX_LIMITS.NONE,
+    YELL = ChatteryConstants.EDIT_BOX_LIMITS.NONE,
+    CHANNEL = ChatteryConstants.EDIT_BOX_LIMITS.DEFAULT,
+    PARTY = ChatteryConstants.EDIT_BOX_LIMITS.NONE,
+    RAID = ChatteryConstants.EDIT_BOX_LIMITS.NONE,
+    RAID_WARNING = ChatteryConstants.EDIT_BOX_LIMITS.NONE,
+    INSTANCE_CHAT = ChatteryConstants.EDIT_BOX_LIMITS.NONE,
+    GUILD = ChatteryConstants.EDIT_BOX_LIMITS.NONE,
+    OFFICER = ChatteryConstants.EDIT_BOX_LIMITS.NONE,
+    WHISPER = ChatteryConstants.EDIT_BOX_LIMITS.NONE,
+    VOICE_TEXT = ChatteryConstants.EDIT_BOX_LIMITS.DEFAULT,
+    BN_WHISPER = ChatteryConstants.EDIT_BOX_LIMITS.NONE
+};
+
 ------------
 
 Chattery.Constants = ChatteryConstants;

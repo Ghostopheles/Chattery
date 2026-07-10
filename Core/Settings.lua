@@ -14,7 +14,8 @@ local Setting = {
 	HandleCapitalization = "HandleCapitalization",
 	HandlePunctuation = "HandlePunctuation",
 	EnableUndo = "EnableUndo",
-	ShowMinimapButton = "ShowMinimapButton"
+	ShowMinimapButton = "ShowMinimapButton",
+	ShowCharacterCount = "ShowCharacterCount"
 };
 
 local defaultConfig = {
@@ -26,6 +27,7 @@ local defaultConfig = {
 	[Setting.HandlePunctuation] = false,
 	[Setting.EnableUndo] = true,
 	[Setting.ShowMinimapButton] = true,
+	[Setting.ShowCharacterCount] = true
 };
 
 local configOrder = {
@@ -36,7 +38,8 @@ local configOrder = {
 	Setting.HandleCapitalization,
 	Setting.HandlePunctuation,
 	Setting.EnableUndo,
-	Setting.ShowMinimapButton
+	Setting.ShowMinimapButton,
+	Setting.ShowCharacterCount
 };
 
 local settingText = {
@@ -71,6 +74,10 @@ local settingText = {
 	[Setting.ShowMinimapButton] = {
 		Label = Strings.SETTING_SHOW_MINIMAP_BUTTON_LABEL,
 		Hint = Strings.SETTING_SHOW_MINIMAP_BUTTON_HINT
+	},
+	[Setting.ShowCharacterCount] = {
+		Label = Strings.SETTING_SHOW_CHARACTER_COUNT_LABEL,
+		Hint = Strings.SETTING_SHOW_CHARACTER_COUNT_HINT
 	}
 };
 

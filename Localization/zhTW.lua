@@ -23,6 +23,9 @@ local L = {
 	SETTING_SHOW_MINIMAP_BUTTON_LABEL = "顯示小地圖按鈕",
 	SETTING_SHOW_MINIMAP_BUTTON_HINT = "顯示Chattery小地圖按鈕",
 
+	SETTING_SHOW_CHARACTER_COUNT_LABEL = "顯示訊息字元計數",
+	SETTING_SHOW_CHARACTER_COUNT_HINT = "在聊天輸入框上顯示目前與最大訊息長度",
+
 	NOTIF_HW_PROMPT = "按 [Enter] 繼續",
 	NOTIF_MSG_THROTTLED = "訊息已限流",
 	NOTIF_WAITING_FOR_THROTTLE = "等待中...",

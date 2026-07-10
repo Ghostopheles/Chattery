@@ -23,6 +23,9 @@ local L = {
 	SETTING_SHOW_MINIMAP_BUTTON_LABEL = "Mostra pulsante sulla minimappa",
 	SETTING_SHOW_MINIMAP_BUTTON_HINT = "Mostra il pulsante di Chattery sulla minimappa",
 
+	SETTING_SHOW_CHARACTER_COUNT_LABEL = "Mostra conteggio caratteri messaggio",
+	SETTING_SHOW_CHARACTER_COUNT_HINT = "Mostra la lunghezza attuale e massima del messaggio nella casella di chat",
+
 	NOTIF_HW_PROMPT = "Premi [Invio] per continuare",
 	NOTIF_MSG_THROTTLED = "Messaggio limitato",
 	NOTIF_WAITING_FOR_THROTTLE = "In attesa...",

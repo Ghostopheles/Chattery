@@ -23,6 +23,9 @@ local L = {
 	SETTING_SHOW_MINIMAP_BUTTON_LABEL = "Показывать кнопку у миникарты",
 	SETTING_SHOW_MINIMAP_BUTTON_HINT = "Показывает кнопку Chattery у миникарты",
 
+	SETTING_SHOW_CHARACTER_COUNT_LABEL = "Показывать счётчик символов сообщения",
+	SETTING_SHOW_CHARACTER_COUNT_HINT = "Показывает текущую и максимальную длину сообщения в поле чата",
+
 	NOTIF_HW_PROMPT = "Нажмите [Enter], чтобы продолжить",
 	NOTIF_MSG_THROTTLED = "Сообщение ограничено",
 	NOTIF_WAITING_FOR_THROTTLE = "Ожидание...",

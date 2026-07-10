@@ -23,6 +23,9 @@ local L = {
 	SETTING_SHOW_MINIMAP_BUTTON_LABEL = "Minimap-Button anzeigen",
 	SETTING_SHOW_MINIMAP_BUTTON_HINT = "Zeigt den Chattery-Minimap-Button an",
 
+	SETTING_SHOW_CHARACTER_COUNT_LABEL = "Zeichenanzahl der Nachricht anzeigen",
+	SETTING_SHOW_CHARACTER_COUNT_HINT = "Zeigt die aktuelle und maximale Nachrichtenlänge im Chat-Eingabefeld an",
+
 	NOTIF_HW_PROMPT = "Drücke [Enter], um fortzufahren",
 	NOTIF_MSG_THROTTLED = "Nachricht gedrosselt",
 	NOTIF_WAITING_FOR_THROTTLE = "Warten...",

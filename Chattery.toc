@@ -60,3 +60,4 @@ Templates/Animations.xml
 Templates/SettingControl.xml
 Templates/SettingsFrame.xml
 Templates/Notification.xml
+Templates/CharacterCount.xml

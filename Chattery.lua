@@ -12,42 +12,27 @@ local UNDO_HOOKED = {};
 ---@class Chattery
 Chattery = {};
 
-function Chattery.Init()
-	EventRegistry:RegisterCallback("ChatFrame.OnEditBoxFocusGained", Chattery.OnEditBoxFocusGained);
-
-	Utils = Chattery.Utils;
-
-	local function OnMessageSent()
-		if Chattery.QueueHandler.Running then
-			return;
-		end
-		local editBox = ChatFrameUtil.GetLastActiveWindow();
-		editBox.disableActivate = false;
-	end
-
-	Chattery.EventRegistry:RegisterCallback(Chattery.Events.MESSAGE_SENT, OnMessageSent);
-end
-
 function Chattery.ShouldHandleEditBox()
     return not InCombatLockdown() and not Utils.IsInChatLockdown();
-end
-
-function Chattery.SetEditBoxToDefaults(editBox)
-    local defaults = EDITBOX_DEFAULTS[editBox];
-    if not defaults then
-        return;
-    end
-
-    editBox:SetMaxLetters(defaults.MaxLetters);
-    editBox:SetMaxBytes(defaults.MaxBytes);
-    editBox:SetVisibleTextByteLimit(defaults.VisibleTextByteLimit);
 end
 
 local function ShouldHandleUndo()
 	return Chattery.Settings.GetSetting(Chattery.Setting.EnableUndo);
 end
 
-local function HookEditBoxUndo(editBox)
+local function UpdateEditBoxLimits(editBox, chatType, newMax)
+	chatType = chatType or editBox:GetChatType();
+	newMax = newMax or Chattery.Constants.CHAT_TYPE_TO_EDIT_BOX_LIMITS[chatType];
+	local oldMax = editBox:GetMaxBytes();
+	if oldMax ~= newMax.MaxBytes then
+		editBox:SetMaxLetters(newMax.MaxLetters);
+		editBox:SetMaxBytes(newMax.MaxBytes);
+		editBox:SetVisibleTextByteLimit(newMax.MaxVisibleTextByteLimit);
+		Chattery.EventRegistry:TriggerEvent(Chattery.Events.CHAT_EDIT_BOX_LIMITS_CHANGED, editBox, newMax);
+	end
+end
+
+local function HookEditBox(editBox)
     if UNDO_HOOKED[editBox] then
 		return;
 	end
@@ -90,6 +75,15 @@ local function HookEditBoxUndo(editBox)
 		end
 		prevText = "";
 	end);
+
+	hooksecurefunc(editBox, "UpdateHeader", function()
+		if not Chattery.ShouldHandleEditBox() or not editBox:IsShown() then
+			return;
+		end
+
+		local chatType = editBox:GetChatType();
+		Chattery.EventRegistry:TriggerEvent(Chattery.Events.ACTIVE_CHAT_TYPE_CHANGED, editBox, chatType);
+	end);
 end
 
 ---@param editBox EditBox
@@ -109,15 +103,41 @@ function Chattery.OnEditBoxFocusGained(_, editBox)
         EDITBOX_DEFAULTS[editBox] = {
             MaxLetters = editBox:GetMaxLetters(),
             MaxBytes = editBox:GetMaxBytes(),
-            VisibleTextByteLimit = editBox:GetVisibleTextByteLimit()
+            MaxVisibleTextByteLimit = editBox:GetVisibleTextByteLimit()
         };
     end
 
-	HookEditBoxUndo(editBox);
+	HookEditBox(editBox);
+    UpdateEditBoxLimits(editBox);
+	ChatteryCharacterCountFrame:AttachTo(editBox);
+end
 
-    editBox:SetMaxLetters(0);
-    editBox:SetMaxBytes(0);
-    editBox:SetVisibleTextByteLimit(0);
+function Chattery.SetEditBoxToDefaults(editBox)
+    local defaults = EDITBOX_DEFAULTS[editBox];
+    if not defaults then
+        return;
+    end
+
+	UpdateEditBoxLimits(editBox, nil, defaults);
+end
+
+function Chattery.Init()
+	EventRegistry:RegisterCallback("ChatFrame.OnEditBoxFocusGained", Chattery.OnEditBoxFocusGained);
+
+	Utils = Chattery.Utils;
+
+	local function OnMessageSent()
+		if Chattery.QueueHandler.Running then
+			return;
+		end
+		local editBox = ChatFrameUtil.GetLastActiveWindow();
+		editBox.disableActivate = false;
+	end
+
+	Chattery.EventRegistry:RegisterCallback(Chattery.Events.MESSAGE_SENT, OnMessageSent);
+	Chattery.EventRegistry:RegisterCallback(Chattery.Events.ACTIVE_CHAT_TYPE_CHANGED, function(_, editBox, chatType)
+		UpdateEditBoxLimits(editBox, chatType);
+	end);
 end
 
 EventUtil.ContinueOnAddOnLoaded(addonName, Chattery.Init);

@@ -1,6 +1,16 @@
-# 0.8.3
+# 0.8.4
 
 **Reminder**: You can access the Chattery settings through the minimap button, the addon compartment, or by using the `/chattery` command.
+
+## Added
+- A character count display to the chat frame edit box
+	- This will display the length of the current message and the message size limit, if present
+	- This can be disabled in the settings
+
+## Fixed
+- You can no longer send messages that Chattery can't handle to custom/global channels (i.e. Trade, General)
+
+# 0.8.3
 
 ## Added
 - A shiny new minimap button. Can be toggled off in the settings, or with a right-click

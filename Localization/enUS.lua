@@ -22,8 +22,11 @@ local L = {
 	SETTING_ENABLE_UNDO_LABEL = "Enable Undo with Ctrl+Z",
 	SETTING_ENABLE_UNDO_HINT = "Press Ctrl+Z to restore a deleted or closed message",
 
-	SETTING_SHOW_MINIMAP_BUTTON_LABEL = "Show minimap Button",
+	SETTING_SHOW_MINIMAP_BUTTON_LABEL = "Show Minimap Button",
 	SETTING_SHOW_MINIMAP_BUTTON_HINT = "Show the Chattery minimap button",
+
+	SETTING_SHOW_CHARACTER_COUNT_LABEL = "Show Message Character count",
+	SETTING_SHOW_CHARACTER_COUNT_HINT = "Show the current and max message length on the chat editbox",
 
 	NOTIF_HW_PROMPT = "Press [Enter] to continue",
 	NOTIF_MSG_THROTTLED = "Message throttled",

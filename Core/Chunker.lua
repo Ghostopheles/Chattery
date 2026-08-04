@@ -127,7 +127,7 @@ end
 function Chunker.SplitMessageByWords(message)
     local parts = {};
 
-    for word, spaces in message:gmatch("(%S+)(%s*)") do
+    for word, spaces in message:gmatch("(%s*%S+)(%s*)") do
         tinsert(parts, word .. spaces);
     end
 
@@ -288,7 +288,9 @@ function Chunker.SplitMessage(message, chunkSize, chatType)
         local startMarker = (i > 1) and (splitMarker .. " ") or "";
         local endMarker = (i < numFinalChunks) and splitMarker or "";
 
-        if strbyte(content, -1) ~= 32 then
+        content = content:match("^%s*(.-)%s*$");
+
+        if #content > 0 and #endMarker > 0 then
             content = content .. " ";
         end
 

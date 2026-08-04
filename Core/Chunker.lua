@@ -268,7 +268,7 @@ function Chunker.SplitMessage(message, chunkSize, chatType)
     flushRaw();
 
     if Chunker.ShouldHandleCapitalization() and #rawChunks > 0 then
-        rawChunks[1] = rawChunks[1]:gsub("(%A*)(%l)", function(pre, letter)
+        rawChunks[1] = rawChunks[1]:gsub("(%A*)(%a)", function(pre, letter)
             return pre .. letter:upper();
         end, 1);
     end

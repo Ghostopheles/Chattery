@@ -1,6 +1,14 @@
-# 0.8.4
+# 0.8.5
 
 **Reminder**: You can access the Chattery settings through the minimap button, the addon compartment, or by using the `/chattery` command.
+
+## Fixed
+- Chat links are no longer hungry enough to eat spaces in your message
+- Messages should no longer have an extra space added to the end
+	- This would've manifested as your character playing the wrong "talking" animation when talking in `/say` and related channels
+- Convinced the auto-capitalization feature to chill out and not erroneously capitalize the second letter of your message
+
+# 0.8.4
 
 ## Added
 - A character count display to the chat frame edit box
@@ -9,23 +17,3 @@
 
 ## Fixed
 - You can no longer send messages that Chattery can't handle to custom/global channels (i.e. Trade, General)
-
-# 0.8.3
-
-## Added
-- A shiny new minimap button. Can be toggled off in the settings, or with a right-click
-- Settings that have been changed from their defaults now have a button beside them to reset them back to their former glory
-
-## Fixed
-- Fixed a catastrophic explosion that could occur when sending multi-part messages while in a delve
-
-# 0.8.2
-
-## Added
-- Auto grammar settings now apply to messages shorter than 255 characters long
-	- This excludes the RP formatting setting
-
-## Fixed
-- Fixed an issue that caused long messages with no spaces would throw errors and fail to send
-- Fixed an issue where messages could end up over the max message length and fail to send
-- Fixed an overflow error that would be thrown if you tried to open the chat box while messages were sending

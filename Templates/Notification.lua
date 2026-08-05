@@ -7,6 +7,7 @@ end
 
 function ChatteryNotificationFrameMixin:OnHide()
 	ClearOverrideBindings(self);
+	self:ClearTimeout();
 end
 
 function ChatteryNotificationFrameMixin:ShowNotification(message, color, showSpinner, hardwarePrompt, duration)
@@ -23,7 +24,7 @@ function ChatteryNotificationFrameMixin:ShowNotification(message, color, showSpi
 	end
 
 	if duration then
-		C_Timer.After(duration, function() self:HideNotification() end);
+		self:SetTimeout(duration);
 	end
 
 	if hardwarePrompt then
@@ -39,4 +40,21 @@ end
 function ChatteryNotificationFrameMixin:OnHardwareButtonClick()
 	ClearOverrideBindings(self);
 	Chattery.ChatManager.ContinueFromPrompt();
+end
+
+function ChatteryNotificationFrameMixin:SetTimeout(timeout)
+	self.TimeoutCallback = C_FunctionContainers.CreateCallback(function() self:HideNotification() end);
+	C_Timer.After(timeout, self.TimeoutCallback);
+end
+
+function ChatteryNotificationFrameMixin:ClearTimeout()
+	if not self.TimeoutCallback then
+		return;
+	end
+
+	if not self.TimeoutCallback:IsCancelled() then
+		self.TimeoutCallback:Cancel();
+	end
+
+	self.TimeoutCallback = nil;
 end

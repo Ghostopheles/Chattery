@@ -39,15 +39,17 @@ local NOTIF_TYPE_TO_COLOR = {
 	[NOTIF_TYPE.WAITING_FOR_THROTTLE] = WHITE_FONT_COLOR,
 };
 
+local ACTIVE_NOTIFICATION_TYPE;
+
 ---@class ChatteryNotifications
 local Notifications = {};
 
 function Notifications.ShowNotification(notifType, duration)
-	if ChatteryNotificationFrame:IsShown() then
-		return;
+	if ChatteryNotificationFrame:IsShown() and (notifType ~= ACTIVE_NOTIFICATION_TYPE) then
+		Notifications.HideNotification(true);
 	end
 
-	if ACTIVE_CHAT_EDIT_BOX then
+	if ACTIVE_CHAT_EDIT_BOX and (ACTIVE_NOTIFICATION_TYPE == NOTIF_TYPE.HARDWARE_PROMPT) then
 		ChatFrameUtil.DeactivateChat(ACTIVE_CHAT_EDIT_BOX);
 	end
 
@@ -60,6 +62,7 @@ function Notifications.ShowNotification(notifType, duration)
 	local showSpinner = notifType == NOTIF_TYPE.WAITING_FOR_THROTTLE;
 	local hardwarePrompt = notifType == NOTIF_TYPE.HARDWARE_PROMPT;
 	ShowNotificationFrame(message, color, showSpinner, hardwarePrompt, duration);
+	ACTIVE_NOTIFICATION_TYPE = notifType;
 end
 
 function Notifications.HideNotification(immediately)
@@ -68,6 +71,7 @@ function Notifications.HideNotification(immediately)
 	end
 
 	HideNotificationFrame(immediately);
+	ACTIVE_NOTIFICATION_TYPE = nil;
 end
 
 function Notifications.OnShowHardwarePrompt()
@@ -80,8 +84,6 @@ function Notifications.OnHideHardwarePrompt()
 end
 
 function Notifications.OnShowWaitingMessage(_, duration)
-	duration = duration or 5;
-
 	local notifType = NOTIF_TYPE.WAITING_FOR_THROTTLE;
 	Notifications.ShowNotification(notifType, duration);
 end

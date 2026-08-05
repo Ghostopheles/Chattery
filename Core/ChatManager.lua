@@ -49,6 +49,7 @@ function QueueHandler:Start()
     self.Running = true;
     self.WaitingForFirstConfirmation = true;
 
+	Registry:TriggerEvent(Events.SHOW_WAITING_MESSAGE);
     FIRST_CHUNK_TIMER = C_Timer.NewTimer(FIRST_CHUNK_CONFIRMATION_TIMEOUT, function()
         if self.Running and self.WaitingForFirstConfirmation then
             wipe(self.MessageQueue);
@@ -104,7 +105,6 @@ function QueueHandler:Wait(throttle)
 	local gen = self.WaitGen;
 
 	local timeout = throttle and 2 or 1;
-	Registry:TriggerEvent(Events.SHOW_WAITING_MESSAGE, timeout * #self.MessageQueue);
 	C_Timer.After(timeout, function()
 		if self.Running and self.WaitGen == gen then
 			self.Waiting = false;

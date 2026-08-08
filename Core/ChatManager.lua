@@ -11,7 +11,7 @@ local HIDE_THROTTLE_MESSAGE = true; -- make this a setting probably
 
 local THROTTLE_BYTES_PER_SECOND = 1000;
 local THROTTLE_BURST_BYTES_PER_SECOND = 2000;
-local TICK_PERIOD = 1;
+local TICK_PERIOD = 0.5;
 
 local FIRST_CHUNK_CONFIRMATION_TIMEOUT = 5;
 local FIRST_CHUNK_TIMER = nil;

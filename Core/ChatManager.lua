@@ -21,14 +21,13 @@ local BANDWIDTH_TIME = GetTime();
 
 local BNET_CHAT_TYPE = "BN_WHISPER";
 
----@enum
 local HARDWARE_RESTRICTED_CHAT_TYPES = {
     SAY = true,
     YELL = true,
-    CHANNEL = true
+	GUILD = true,
+    CHANNEL = true,
 };
 
----@enum
 local MESSAGE_SEND_ERR = {
     SUCCESS = 1,
     WAIT = 2,

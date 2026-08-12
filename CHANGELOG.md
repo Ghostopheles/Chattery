@@ -3,10 +3,11 @@
 **Reminder**: You can access the Chattery settings through the minimap button, the addon compartment, or by using the `/chattery` command.
 
 ## Changed
-- The `GUILD` chat type is now hardware restricted
+- The `GUILD` and `GUILD_DISCORD` chat types are now hardware restricted
 
 ## Fixed
 - Fixed an issue sending messages beginning with a hyperlink while the 'auto-capitalization' setting was enabled
+- Fixed missing edit box size limits for the `GUILD_DISCORD` chat type
 
 # 0.8.6
 

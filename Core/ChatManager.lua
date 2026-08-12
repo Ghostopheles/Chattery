@@ -25,6 +25,7 @@ local HARDWARE_RESTRICTED_CHAT_TYPES = {
     SAY = true,
     YELL = true,
 	GUILD = true,
+	GUILD_DISCORD = true,
     CHANNEL = true,
 };
 

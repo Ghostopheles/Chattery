@@ -1,6 +1,11 @@
-# 0.8.6b
+# 0.8.6c
 
 **Reminder**: You can access the Chattery settings through the minimap button, the addon compartment, or by using the `/chattery` command.
+
+## Fixed
+- Fixed a catastrophic lib-related calamity that prevented the addon from loading properly (thanks Peterodox)
+
+# 0.8.6b
 
 ## Changed
 - The `GUILD` and `GUILD_DISCORD` chat types are now hardware restricted

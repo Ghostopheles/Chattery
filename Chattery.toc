@@ -1,4 +1,4 @@
-## Interface: 120007, 120100
+## Interface: 120100, 120105
 ## Title: |cff5865F2Chattery|r
 ## Notes: A collection of cadaverous chat enhancements for roleplayers
 ## Author: Ghostopheles
@@ -22,7 +22,6 @@
 ## Category-zhTW: 對話
 
 ## X-License: Public Domain
-## X-Category: Development Tools
 
 ## X-Curse-Project-ID: 1443835
 ## X-Wago-ID: 4N2kbW6L

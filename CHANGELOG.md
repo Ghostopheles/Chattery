@@ -1,3 +1,11 @@
+# 0.8.7
+
+**Reminder**: You can access the Chattery settings through the minimap button, the addon compartment, or by using the `/chattery` command.
+
+## Fixed
+- Fixed emotes causing catastrophic failure
+	- This means you'll have to press enter a bunch to send long emotes. Blame Blizzard :(.
+
 # 0.8.6c
 
 **Reminder**: You can access the Chattery settings through the minimap button, the addon compartment, or by using the `/chattery` command.

@@ -27,6 +27,7 @@ local HARDWARE_RESTRICTED_CHAT_TYPES = {
 	GUILD = true,
 	GUILD_DISCORD = true,
     CHANNEL = true,
+	EMOTE = true,
 };
 
 local MESSAGE_SEND_ERR = {

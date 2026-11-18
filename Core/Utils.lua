@@ -28,6 +28,17 @@ function Utils.IsInPrecariousSituation()
 	return Utils.IsInOpenWorld() or (Utils.IsDelving() or Utils.IsInGarrison());
 end
 
+function Utils.PlayerIsMe(playerName)
+	if NameUtil then
+		local first, surname = NameUtil.SplitPlayerNameIntoParts(playerName);
+		return NameUtil.IsPlayerMe(first, surname);
+	else
+		local name, realm = UnitFullName("player");
+		local fullName = (realm and realm ~= "") and format("%s-%s", name, realm) or name;
+		return playerName == name or playerName == fullName;
+	end
+end
+
 ------------
 
 Chattery.Utils = Utils;

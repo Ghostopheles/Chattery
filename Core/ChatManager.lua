@@ -211,9 +211,7 @@ function QueueHandler:OnChatMessageReceived(event, playerName)
 		return;
 	end
 
-	local name, realm = UnitFullName("player");
-	local fullName = (realm and realm ~= "") and format("%s-%s", name, realm) or name;
-	if playerName == name or playerName == fullName then
+	if Utils.PlayerIsMe(playerName) then
 		Registry:TriggerEvent(Events.MESSAGE_SENT);
 	end
 end
